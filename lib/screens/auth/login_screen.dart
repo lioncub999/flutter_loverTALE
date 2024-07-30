@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../apis/apis.dart';
 import '../../helper/custom_dialogs.dart';
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pop(context); // 로딩 끝
       if (user != null) {
         print(user);
-        // DB에 로그인 정보 확인
+        // // DB에 로그인 정보 확인
         // if ((await APIs.userExists())) {
         //   // DB에 정보 있으면 홈 화면으로 이동
         //   Navigator.pushAndRemoveUntil(
@@ -53,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //   CustomDialogs.showSnackbar(context, '로그인 되었습니다');
         //
         // }
-        // db에 로그인 정보 없으면 데이터 create
+        // // db에 로그인 정보 없으면 데이터 create
         // else {
         //   APIs.createUser().then((value) {
         //     Navigator.pushAndRemoveUntil(
@@ -86,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +116,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                     width: mq.width * 0.9,
                     height: mq.height * 0.06,
+                    child: SignInWithAppleButton(
+                      onPressed: () async {
+                        final credential = await SignInWithApple.getAppleIDCredential(
+                          scopes: [
+                            AppleIDAuthorizationScopes.email,
+                            AppleIDAuthorizationScopes.fullName,
+                          ],
+                        );
+
+                        print(credential);
+
+                        // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                        // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                      },
+                    )),
+          ),
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 1000),
+            top: mq.height * .78,
+            left: _isAnimate ? mq.width * .05 : mq.width * 1,
+            child:
+                // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                // ┃  Body - 카카오 로그인 버튼    ┃
+                // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                SizedBox(
+                    width: mq.width * 0.9,
+                    height: mq.height * 0.06,
                     child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white, // Btn-BackgroundColor
@@ -130,70 +157,40 @@ class _LoginScreenState extends State<LoginScreen> {
                           text: const TextSpan(
                               style: TextStyle(color: Colors.black, fontSize: 16),
                               children: [
-                                TextSpan(text: '애플 아이디로 '),
+                                TextSpan(text: '카카오 아이디로 '),
                                 TextSpan(text: '로그인', style: TextStyle(fontWeight: FontWeight.w500))
                               ]),
                         ))),
           ),
           AnimatedPositioned(
             duration: Duration(milliseconds: 1000),
-            top: mq.height * .78,
-            left: _isAnimate ? mq.width * .05 : mq.width * 1,
-            child:
-            // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-            // ┃  Body - 카카오 로그인 버튼    ┃
-            // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-            SizedBox(
-                width: mq.width * 0.9,
-                height: mq.height * 0.06,
-                child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // Btn-BackgroundColor
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15))), // Btn-Shape
-                    ),
-                    onPressed: () {
-                      // _handleLoginBtnClick(); // LoginBtn-ClickEvent
-                    },
-                    // LoginBtn-Element
-                    label: RichText(
-                      text: const TextSpan(
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                          children: [
-                            TextSpan(text: '카카오 아이디로 '),
-                            TextSpan(text: '로그인', style: TextStyle(fontWeight: FontWeight.w500))
-                          ]),
-                    ))),
-          ),
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 1000),
             top: mq.height * .86,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
             child:
-            // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-            // ┃  Body - 구글 로그인 버튼    ┃
-            // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-            SizedBox(
-                width: mq.width * 0.9,
-                height: mq.height * 0.06,
-                child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // Btn-BackgroundColor
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15))), // Btn-Shape
-                    ),
-                    onPressed: () {
-                      _handleLoginBtnClick(); // LoginBtn-ClickEvent
-                    },
-                    // LoginBtn-Element
-                    label: RichText(
-                      text: const TextSpan(
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                          children: [
-                            TextSpan(text: '구글 아이디로 '),
-                            TextSpan(text: '로그인', style: TextStyle(fontWeight: FontWeight.w500))
-                          ]),
-                    ))),
+                // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                // ┃  Body - 구글 로그인 버튼    ┃
+                // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                SizedBox(
+                    width: mq.width * 0.9,
+                    height: mq.height * 0.06,
+                    child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white, // Btn-BackgroundColor
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(15))), // Btn-Shape
+                        ),
+                        onPressed: () {
+                          _handleLoginBtnClick(); // LoginBtn-ClickEvent
+                        },
+                        // LoginBtn-Element
+                        label: RichText(
+                          text: const TextSpan(
+                              style: TextStyle(color: Colors.black, fontSize: 16),
+                              children: [
+                                TextSpan(text: '구글 아이디로 '),
+                                TextSpan(text: '로그인', style: TextStyle(fontWeight: FontWeight.w500))
+                              ]),
+                        ))),
           )
         ],
       ),

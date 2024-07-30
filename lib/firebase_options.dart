@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC6H2LK-rErH4vZnzm2EChtT4IeEaAZATA',
-    appId: '1:373462846687:android:9aa7d5b68369ae7aac6d6a',
-    messagingSenderId: '373462846687',
-    projectId: 'lovertale',
-    storageBucket: 'lovertale.appspot.com',
+    apiKey: 'AIzaSyDZWOXZbrORr-nz5XYRj6ddzLN7p8bgOw8',
+    appId: '1:71120242981:android:2cd02c8994120716c3b2cc',
+    messagingSenderId: '71120242981',
+    projectId: 'lovertale-520e3',
+    storageBucket: 'lovertale-520e3.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDPPSTn6OoVXD2qgWmH6WI8ueRB46G8LQg',
-    appId: '1:373462846687:ios:4da74595b23e6ef7ac6d6a',
-    messagingSenderId: '373462846687',
-    projectId: 'lovertale',
-    storageBucket: 'lovertale.appspot.com',
-    iosClientId: '373462846687-vn4ffftuc34lpu4pbiha553vse35ou8f.apps.googleusercontent.com',
+    apiKey: 'AIzaSyC7MQKbjxMX9DScKQ58wqqVdXzaEGbF5vs',
+    appId: '1:71120242981:ios:dd4add536859c185c3b2cc',
+    messagingSenderId: '71120242981',
+    projectId: 'lovertale-520e3',
+    storageBucket: 'lovertale-520e3.appspot.com',
+    iosClientId: '71120242981-p8kl2m66useop9017vucjoghoud407he.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterLoverTale',
   );
 

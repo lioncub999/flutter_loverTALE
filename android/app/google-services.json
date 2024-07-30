@@ -1,40 +1,40 @@
 {
   "project_info": {
-    "project_number": "373462846687",
-    "project_id": "lovertale",
-    "storage_bucket": "lovertale.appspot.com"
+    "project_number": "71120242981",
+    "project_id": "lovertale-520e3",
+    "storage_bucket": "lovertale-520e3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:373462846687:android:9aa7d5b68369ae7aac6d6a",
+        "mobilesdk_app_id": "1:71120242981:android:2cd02c8994120716c3b2cc",
         "android_client_info": {
           "package_name": "com.modu.lovertale"
         }
       },
       "oauth_client": [
         {
-          "client_id": "373462846687-iqm4frmfahohh68si8i9hh74a31upkpk.apps.googleusercontent.com",
+          "client_id": "71120242981-evorn3574ajlnufe0r7g54oco69lo4av.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC6H2LK-rErH4vZnzm2EChtT4IeEaAZATA"
+          "current_key": "AIzaSyDZWOXZbrORr-nz5XYRj6ddzLN7p8bgOw8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "373462846687-iqm4frmfahohh68si8i9hh74a31upkpk.apps.googleusercontent.com",
+              "client_id": "71120242981-evorn3574ajlnufe0r7g54oco69lo4av.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "373462846687-3lit9lv8g3fkgn0uaia34dp2drnqctg5.apps.googleusercontent.com",
+              "client_id": "71120242981-p8kl2m66useop9017vucjoghoud407he.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.modu.lovertale"
+                "bundle_id": "com.example.flutterLoverTale"
               }
             }
           ]
