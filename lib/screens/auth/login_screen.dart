@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:http/http.dart' as http;
 
 import '../../apis/apis.dart';
 import '../../helper/custom_dialogs.dart';
@@ -119,39 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<UserCredential?> signInWithKakao() async {
-    // try {
-    //   bool isInstalled = await isKakaoTalkInstalled();
-    //
-    //   print(isInstalled);
-    //
-    //   OAuthToken token = isInstalled
-    //       ? await UserApi.instance.loginWithKakaoTalk()
-    //       : await UserApi.instance.loginWithKakaoAccount();
-    //
-    //   // Firebase 자격 증명으로 변환
-    //   final oauthCredential = OAuthProvider("oidc.lovertale").credential(
-    //     accessToken: token.accessToken,
-    //   );
-    //
-    //   // 사용자 정보 가져오기
-    //   final url = Uri.https('kapi.kakao.com', '/v2/user/me');
-    //   final response = await http.get(
-    //     url,
-    //     headers: {
-    //       HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
-    //     },
-    //   );
-    //
-    //   final profileInfo = json.decode(response.body);
-    //
-    //   // Firebase에 자격 증명으로 로그인
-    //   return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-    //
-    // } catch (error) {
-    //   print('카카오톡으로 로그인 실패 $error');
-    //   return null;
-    // }
+  // ┏━━━━━━━━━━━━━━━━━━━┓
+  // ┃   카카오 로그인   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━┛
+  Future<UserCredential?> _signInWithKakao() async {
     try {
       OAuthToken token =
       await UserApi.instance.loginWithKakaoAccount(); // 카카오 로그인
@@ -164,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return FirebaseAuth.instance.signInWithCredential(credential);
     } catch (error) {
       print('카카오계정으로 로그인 실패 $error');
+      return null;
     }
   }
 
@@ -202,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: SignInWithAppleButton(
                       onPressed: () async {
                         await _signInWithApple();
-                        print(APIs.user);
                       },
                     )),
           ),
@@ -224,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.all(Radius.circular(15))), // Btn-Shape
                         ),
                         onPressed: () {
-                          signInWithKakao();
+                          _signInWithKakao();
                           // _handleLoginBtnClick(); // LoginBtn-ClickEvent
                         },
                         // LoginBtn-Element
