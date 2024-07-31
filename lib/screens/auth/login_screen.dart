@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:http/http.dart' as http;
 
 import '../../apis/apis.dart';
 import '../../helper/custom_dialogs.dart';
@@ -87,6 +92,84 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // ┏━━━━━━━━━━━━━━━━━┓
+  // ┃   애플 로그인   ┃
+  // ┗━━━━━━━━━━━━━━━━━┛
+  Future<UserCredential?> _signInWithApple() async {
+    try {
+      // 애플 ID 자격 증명 얻기
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // OAuthCredential로 변환
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // Firebase에 자격 증명으로 로그인
+      return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    } catch (e) {
+      print("Error during Apple Sign-In: $e");
+      return null;
+    }
+  }
+
+  Future<UserCredential?> signInWithKakao() async {
+    // try {
+    //   bool isInstalled = await isKakaoTalkInstalled();
+    //
+    //   print(isInstalled);
+    //
+    //   OAuthToken token = isInstalled
+    //       ? await UserApi.instance.loginWithKakaoTalk()
+    //       : await UserApi.instance.loginWithKakaoAccount();
+    //
+    //   // Firebase 자격 증명으로 변환
+    //   final oauthCredential = OAuthProvider("oidc.lovertale").credential(
+    //     accessToken: token.accessToken,
+    //   );
+    //
+    //   // 사용자 정보 가져오기
+    //   final url = Uri.https('kapi.kakao.com', '/v2/user/me');
+    //   final response = await http.get(
+    //     url,
+    //     headers: {
+    //       HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
+    //     },
+    //   );
+    //
+    //   final profileInfo = json.decode(response.body);
+    //
+    //   // Firebase에 자격 증명으로 로그인
+    //   return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    //
+    // } catch (error) {
+    //   print('카카오톡으로 로그인 실패 $error');
+    //   return null;
+    // }
+    try {
+      OAuthToken token =
+      await UserApi.instance.loginWithKakaoAccount(); // 카카오 로그인
+      var provider = OAuthProvider('oidc.lovertale'); // 제공업체 id
+      var credential = provider.credential(
+        idToken: token.idToken,
+        // 카카오 로그인에서 발급된 idToken(카카오 설정에서 OpenID Connect가 활성화 되어있어야함)
+        accessToken: token.accessToken, // 카카오 로그인에서 발급된 accessToken
+      );
+      return FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (error) {
+      print('카카오계정으로 로그인 실패 $error');
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,17 +201,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: mq.height * 0.06,
                     child: SignInWithAppleButton(
                       onPressed: () async {
-                        final credential = await SignInWithApple.getAppleIDCredential(
-                          scopes: [
-                            AppleIDAuthorizationScopes.email,
-                            AppleIDAuthorizationScopes.fullName,
-                          ],
-                        );
-
-                        print(credential);
-
-                        // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-                        // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                        await _signInWithApple();
+                        print(APIs.user);
                       },
                     )),
           ),
@@ -150,6 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.all(Radius.circular(15))), // Btn-Shape
                         ),
                         onPressed: () {
+                          signInWithKakao();
                           // _handleLoginBtnClick(); // LoginBtn-ClickEvent
                         },
                         // LoginBtn-Element

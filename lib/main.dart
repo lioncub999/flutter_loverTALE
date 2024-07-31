@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_lover_tale/screens/common/splash_screen.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -24,6 +25,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // firebase 초기화
   await _initializeFirebase();
+
+  // 카카오 로그인
+  KakaoSdk.init(nativeAppKey: 'cb3fa92e586e1bf7092997e5a9a9d5be'); // 이 줄을 runApp 위에 추가한다.
 
   runApp(MultiProvider(
     providers: [
