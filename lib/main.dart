@@ -25,9 +25,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // firebase 초기화
   await _initializeFirebase();
-
-  // 카카오 로그인
-  KakaoSdk.init(nativeAppKey: 'cb3fa92e586e1bf7092997e5a9a9d5be'); // 이 줄을 runApp 위에 추가한다.
+  // 카카오 로그인 네이티브 앱키
+  KakaoSdk.init(nativeAppKey: 'cb3fa92e586e1bf7092997e5a9a9d5be');
 
   runApp(MultiProvider(
     providers: [
@@ -86,7 +85,7 @@ class MyApp extends StatefulWidget {
 
 // 전역 State <MainStore>
 class MainStore extends ChangeNotifier {
-  // 하단 State
+  // 하단 Navbar State
   int bottomTapState = 0;
 
   setTapState(tap) {
@@ -108,9 +107,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // 전영역 크기 관리 mq
     mq = MediaQuery.of(context).size;
-    return Scaffold(
+    // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    // ┃   앱 실행시 스플레시 스크린으로 이동   ┃
+    // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+    return const Scaffold(
       body: Center(
-        // 앱 실행시 스플레시 스크린으로 이동
         child: SplashScreen(),
       ),
     );
