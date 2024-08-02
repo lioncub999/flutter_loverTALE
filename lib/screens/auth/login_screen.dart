@@ -138,9 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃   로그인 정보 확인 후 DB에 있는지 확인 (없으면 INSERT   ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   로그인 정보 확인 후 DB에 있는지 확인 (없으면 INSERT)   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   _checkUserExist() async {
     if (await APIs.userExists()) {
       Navigator.of(context).pushReplacement(_moveHomeRoute());

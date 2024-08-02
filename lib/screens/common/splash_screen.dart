@@ -5,7 +5,6 @@ import 'package:flutter_lover_tale/screens/home_screen.dart';
 
 import '../../../main.dart';
 import '../../apis/apis.dart';
-import '../auth/info_insert_screen.dart';
 import '../auth/login_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -45,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // ┃   로그인 안되어 있으면 LoginScreen 이동   ┃
       // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
       else {
-        Route createRoute() {
+        Route loginRoute() {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => const LoginScreen(),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -53,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
             },
           );
         }
-        Navigator.of(context).push(createRoute());
+        Navigator.of(context).push(loginRoute());
       }
     });
   }
