@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lover_tale/screens/auth/info_insert_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -51,9 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // 로딩 끝
           Navigator.pop(context);
           if (user != null) {
-            Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false);
-            CustomDialogs.showSnackbar(context, '로그인 되었습니다');
+            await _checkUserExist();
           }
         });
       case 'KAKAO':
@@ -61,9 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // 로딩 끝
           Navigator.pop(context);
           if (user != null) {
-            Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false);
-            CustomDialogs.showSnackbar(context, '로그인 되었습니다');
+            await _checkUserExist();
           }
         });
       case 'GOOGLE':
@@ -71,9 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // 로딩 끝
           Navigator.pop(context);
           if (user != null) {
-            Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false);
-            CustomDialogs.showSnackbar(context, '로그인 되었습니다');
+            await _checkUserExist();
           }
         });
     }
@@ -91,15 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-      // OAuthCredential로 변환
+      // OAuthCredential 변환
       final oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
         accessToken: appleCredential.authorizationCode,
       );
       // Firebase에 자격 증명으로 로그인
-      return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      return await APIs.auth.signInWithCredential(oauthCredential);
     } catch (e) {
-      print("Error during Apple Sign-In: $e");
       return null;
     }
   }
@@ -113,12 +107,11 @@ class _LoginScreenState extends State<LoginScreen> {
       var provider = OAuthProvider('oidc.lovertale'); // 제공업체 id
       var credential = provider.credential(
         idToken: token.idToken,
-        // 카카오 로그인에서 발급된 idToken(카카오 설정에서 OpenID Connect가 활성화 되어있어야함)
+        // 카카오 로그인에서 발급된 idToken(카카오 설정에서 OpenID Connect 활성화 되어있어야함)
         accessToken: token.accessToken, // 카카오 로그인에서 발급된 accessToken
       );
-      return FirebaseAuth.instance.signInWithCredential(credential);
+      return APIs.auth.signInWithCredential(credential);
     } catch (error) {
-      print('카카오계정으로 로그인 실패 $error');
       return null;
     }
   }
@@ -144,6 +137,20 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  _checkUserExist() async {
+    if (await APIs.userExists()) {
+      Navigator.pushAndRemoveUntil(
+          context, MaterialPageRoute(builder: (_) => const InfoInsertScreen()), (route) => false);
+      CustomDialogs.showSnackbar(context, '로그인 되었습니다');
+    } else {
+      APIs.createUser().then((value) {
+        Navigator.pushAndRemoveUntil(
+            context, MaterialPageRoute(builder: (_) => const InfoInsertScreen()), (route) => false);
+        CustomDialogs.showSnackbar(context, '로그인 되었습니다');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,19 +163,19 @@ class _LoginScreenState extends State<LoginScreen> {
               top: _isAnimate ? mq.height * .4 : mq.height * .6,
               right: mq.width * 0.35,
               width: mq.width * 0.5,
-              child: Text("Lover", style: TextStyle(color: Colors.white, fontSize: 30))),
+              child: const Text("Lover", style: TextStyle(color: Colors.white, fontSize: 30))),
           // Login Screen Title - "TALE"
           AnimatedPositioned(
               duration: const Duration(milliseconds: 500),
               top: _isAnimate ? mq.height * .45 : mq.height * .65,
               right: _isAnimate ? mq.width * 0.25 : mq.width * .25,
               width: mq.width * 0.5,
-              child: Text("TALE", style: TextStyle(color: Colors.white, fontSize: 30))),
+              child: const Text("TALE", style: TextStyle(color: Colors.white, fontSize: 30))),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 애플 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
           AnimatedPositioned(
-            duration: Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 1000),
             top: mq.height * .7,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
             child:
@@ -177,14 +184,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: mq.height * 0.06,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await _signInWithKakao();
+                    await _handleLoginBtnClick("APPLE");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -193,8 +200,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         'assets/apple_logo.png', // 카카오 로고 이미지 경로
                         height: 24,
                       ),
-                      SizedBox(width: 8),
-                      Text(
+                      SizedBox(width: mq.width * .07),
+                      const Text(
                         '애플 아이디로 로그인',
                         style: TextStyle(
                           color: Colors.white,
@@ -210,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // ┃  Body - 카카오 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
           AnimatedPositioned(
-            duration: Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 1000),
             top: mq.height * .78,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
             child:
@@ -219,14 +226,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: mq.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () async {
-                        await _signInWithKakao();
+                        await _handleLoginBtnClick("KAKAO");
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(252, 215, 50, 1.0),
+                        backgroundColor: const Color.fromRGBO(252, 215, 50, 1.0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -235,8 +242,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             'assets/kakao_logo.png', // 카카오 로고 이미지 경로
                             height: 24,
                           ),
-                          SizedBox(width: 8),
-                          Text(
+                          SizedBox(width: mq.width * .07),
+                          const Text(
                             '카카오 아이디로 로그인',
                             style: TextStyle(
                               color: Colors.black,
@@ -252,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // ┃  Body - 구글 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
           AnimatedPositioned(
-            duration: Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 1000),
             top: mq.height * .86,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
             child:
@@ -261,13 +268,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: mq.height * 0.06,
                     child: ElevatedButton(
                       onPressed: () async {
-                        await _signInWithGoogle();
+                        await _handleLoginBtnClick("GOOGLE");
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -276,8 +283,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             'assets/google_logo.png', // 구글 로고 이미지 경로
                             height: 24,
                           ),
-                          SizedBox(width: 8),
-                          Text(
+                          SizedBox(width: mq.width * .07),
+                          const Text(
                             '구글 아이디로 로그인',
                             style: TextStyle(
                               color: Colors.black,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../main.dart';
 import '../../apis/apis.dart';
+import '../auth/info_insert_screen.dart';
 import '../auth/login_screen.dart';
 import '../home_screen.dart';
 
@@ -32,9 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     // "milliseconds : 2초" 후 로그인 화면 이동
     Future.delayed(const Duration(milliseconds: 2000), () {
-      // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-      // ┃   로그인된 유저 있으면 HomeScreen 이동   ┃
-      // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+      // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+      // ┃   로그인된 유저 있으면 DefaultInfoCheck 이동   ┃
+      // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
       if (APIs.auth.currentUser != null) {
         Navigator.pushAndRemoveUntil(
             context, MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false);

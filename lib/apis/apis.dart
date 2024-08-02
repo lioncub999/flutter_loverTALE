@@ -52,7 +52,6 @@ class APIs {
       if (user.exists) {
         me = ModuUser.fromJson(user.data()!);
         await getFirebaseMessagingToken();
-        await APIs.updateActiveStatus(true);
       } else {
         await createUser().then((value) => getSelfInfo());
       }
@@ -71,35 +70,18 @@ class APIs {
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   static Future<void> createUser() async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
-
     final moduUser = ModuUser(
         id: user!.uid,
         name: user!.displayName.toString(),
         image: user!.photoURL.toString(),
         createdAt: time,
-        isOnline: false,
-        lastActive: time,
         pushToken: '',
         gender : '',
         birthDay : '',
-        theme : '',
-        emotionMsg : '',
-        introduce : '',
         isDefaultInfoSet: false,
         email: user!.email.toString());
 
     return await fireStore.collection('CL_USER').doc(user.uid).set(moduUser.toJson());
-  }
-
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃   ● 내 활동 상태와 마지막 활동 시간 업데이트                        ┃
-  // ┃     - parameterType : bool                                          ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  static Future<void> updateActiveStatus(bool isOnline) async {
-    fireStore
-        .collection('CL_USER')
-        .doc(user.uid)
-        .update({'is_online': isOnline, 'last_active': DateTime.now().millisecondsSinceEpoch.toString(), 'push_token': me.pushToken});
   }
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
