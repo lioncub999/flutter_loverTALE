@@ -1,6 +1,8 @@
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lover_tale/screens/auth/info_insert_screen.dart';
+import 'package:flutter_lover_tale/screens/home_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -8,7 +10,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../apis/apis.dart';
 import '../../helper/custom_dialogs.dart';
 import '../../main.dart';
-import '../home_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                로그인 화면                                 ┃
@@ -137,18 +138,47 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   로그인 정보 확인 후 DB에 있는지 확인 (없으면 INSERT   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   _checkUserExist() async {
     if (await APIs.userExists()) {
-      Navigator.pushAndRemoveUntil(
-          context, MaterialPageRoute(builder: (_) => const InfoInsertScreen()), (route) => false);
+      Navigator.of(context).pushReplacement(_moveHomeRoute());
       CustomDialogs.showSnackbar(context, '로그인 되었습니다');
     } else {
       APIs.createUser().then((value) {
-        Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (_) => const InfoInsertScreen()), (route) => false);
+        Navigator.of(context).pushReplacement(_moveHomeRoute());
         CustomDialogs.showSnackbar(context, '로그인 되었습니다');
       });
     }
+  }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃  HomeScreen 이동 페이지 Blur ROUTE   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  Route _moveHomeRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10.0 * animation.value,
+                sigmaY: 10.0 * animation.value,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.1 * animation.value),
+              ),
+            ),
+            FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -178,8 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
             duration: const Duration(milliseconds: 1000),
             top: mq.height * .7,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
-            child:
-            SizedBox(
+            child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
                 child: ElevatedButton(
@@ -191,7 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -220,40 +250,40 @@ class _LoginScreenState extends State<LoginScreen> {
             duration: const Duration(milliseconds: 1000),
             top: mq.height * .78,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
-            child:
-                SizedBox(
-                    width: mq.width * 0.9,
-                    height: mq.height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await _handleLoginBtnClick("KAKAO");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(252, 215, 50, 1.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+            child: SizedBox(
+                width: mq.width * 0.9,
+                height: mq.height * 0.06,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _handleLoginBtnClick("KAKAO");
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(252, 215, 50, 1.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/kakao_logo.png', // 카카오 로고 이미지 경로
+                        height: 24,
+                      ),
+                      SizedBox(width: mq.width * .07),
+                      const Text(
+                        '카카오 아이디로 로그인',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/kakao_logo.png', // 카카오 로고 이미지 경로
-                            height: 24,
-                          ),
-                          SizedBox(width: mq.width * .07),
-                          const Text(
-                            '카카오 아이디로 로그인',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                    ],
+                  ),
+                )),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 구글 로그인 버튼    ┃
@@ -262,39 +292,39 @@ class _LoginScreenState extends State<LoginScreen> {
             duration: const Duration(milliseconds: 1000),
             top: mq.height * .86,
             left: _isAnimate ? mq.width * .05 : mq.width * 1,
-            child:
-                SizedBox(
-                    width: mq.width * 0.9,
-                    height: mq.height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await _handleLoginBtnClick("GOOGLE");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+            child: SizedBox(
+                width: mq.width * 0.9,
+                height: mq.height * 0.06,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _handleLoginBtnClick("GOOGLE");
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/google_logo.png', // 구글 로고 이미지 경로
+                        height: 24,
+                      ),
+                      SizedBox(width: mq.width * .07),
+                      const Text(
+                        '구글 아이디로 로그인',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/google_logo.png', // 구글 로고 이미지 경로
-                            height: 24,
-                          ),
-                          SizedBox(width: mq.width * .07),
-                          const Text(
-                            '구글 아이디로 로그인',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                    ],
+                  ),
+                )),
           )
         ],
       ),

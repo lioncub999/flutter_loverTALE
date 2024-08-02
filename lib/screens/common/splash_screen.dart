@@ -1,10 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_lover_tale/screens/home_screen.dart';
 
 import '../../../main.dart';
 import '../../apis/apis.dart';
 import '../auth/info_insert_screen.dart';
 import '../auth/login_screen.dart';
-import '../home_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                              스플레시 화면                                 ┃
@@ -33,16 +35,15 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     // "milliseconds : 2초" 후 로그인 화면 이동
     Future.delayed(const Duration(milliseconds: 2000), () {
-      // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-      // ┃   로그인된 유저 있으면 DefaultInfoCheck 이동   ┃
-      // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-      if (APIs.auth.currentUser != null) {
-        Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false);
-      }
       // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-      // ┃   로그인 안되어있으면 LoginScreen 이동   ┃
+      // ┃   로그인된 유저 있으면 HomeScreen 이동   ┃
       // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+      if (APIs.auth.currentUser != null) {
+        Navigator.of(context).pushReplacement(_moveHomeRoute());
+      }
+      // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+      // ┃   로그인 안되어 있으면 LoginScreen 이동   ┃
+      // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
       else {
         Route createRoute() {
           return PageRouteBuilder(
@@ -55,6 +56,33 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.of(context).push(createRoute());
       }
     });
+  }
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃  HomeScreen 이동 페이지 Blur ROUTE   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  Route _moveHomeRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10.0 * animation.value,
+                sigmaY: 10.0 * animation.value,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.1 * animation.value),
+              ),
+            ),
+            FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
