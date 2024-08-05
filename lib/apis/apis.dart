@@ -79,7 +79,9 @@ class APIs {
         gender : '',
         birthDay : '',
         isDefaultInfoSet: false,
-        email: user!.email.toString());
+        email: user!.email.toString(),
+        partnerId : '',
+    );
 
     return await fireStore.collection('CL_USER').doc(user.uid).set(moduUser.toJson());
   }

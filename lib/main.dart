@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃                                                                            ┃
 // ┃                             앱 실행 메인 화면                              ┃
+// ┃                                                                            ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 // 전영역 크기 관리 mq (Media Query) 초기화
 late Size mq;
@@ -33,7 +35,9 @@ void main() async {
       ChangeNotifierProvider(create: (c) => MainStore()),
     ],
     child: MaterialApp(
-      // 현지화 (언어 UI) 옵션
+      // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+      // ┃   현지화 (언어 UI) 옵션   ┃
+      // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate, // Material Design 위젯 현지화
         GlobalWidgetsLocalizations.delegate, // 일반 Flutter 위젯 현지화
@@ -44,7 +48,9 @@ void main() async {
         Locale('ko', ''), // 한국어
         Locale('en', ''), // 영어
       ],
-      // 전체 공통 Theme
+      // ┏━━━━━━━━━━━━━━━━━━━━━┓
+      // ┃   전체 공통 Theme   ┃
+      // ┗━━━━━━━━━━━━━━━━━━━━━┛
       theme: ThemeData(
           // Ripple Effect 비활성화
           splashFactory: NoSplash.splashFactory,
@@ -60,7 +66,7 @@ void main() async {
               ),
               iconTheme: IconThemeData(color: Colors.white)),
           // 공통 폰트
-          fontFamily: 'NotoSansKR',
+          fontFamily: 'Pretendard',
           // 하단바 공통 Theme
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Color.fromRGBO(92, 97, 103, 1),
@@ -103,6 +109,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   @override
   Widget build(BuildContext context) {
     // 전영역 크기 관리 mq

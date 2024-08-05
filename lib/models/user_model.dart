@@ -1,5 +1,7 @@
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃                                                                                  ┃
 // ┃                                    UserModel                                     ┃
+// ┃                                                                                  ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class ModuUser {
   ModuUser({
@@ -12,6 +14,7 @@ class ModuUser {
     required this.email,                  // 이메일
     required this.isDefaultInfoSet,       // 기본 정보 입력 완료 여부
     required this.pushToken,              // 푸시 알림용 토큰
+    required this.partnerId,              // 파트너 아이디
   });
 
   late String id;
@@ -23,6 +26,7 @@ class ModuUser {
   late String email;
   late bool isDefaultInfoSet;
   late String pushToken;
+  late String partnerId;
 
   ModuUser.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
@@ -34,6 +38,7 @@ class ModuUser {
     email = json['email'] ?? '';
     isDefaultInfoSet = json['is_default_info_set'] ?? false;
     pushToken = json['push_token'] ?? '';
+    partnerId = json['partner_id'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +52,7 @@ class ModuUser {
     data['email'] = email;
     data['is_default_info_set'] = isDefaultInfoSet;
     data['push_token'] = pushToken;
+    data['partner_id'] = partnerId;
     return data;
   }
 }

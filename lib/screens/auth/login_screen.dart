@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -12,7 +13,9 @@ import '../../helper/custom_dialogs.dart';
 import '../../main.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃                                                                            ┃
 // ┃                                로그인 화면                                 ┃
+// ┃                                                                            ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -181,26 +184,23 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(56, 56, 60, 1), // Splash Screen backgroundColor
+      backgroundColor: const Color.fromRGBO(245, 245, 245, 1), // Login Screen backgroundColor
       body: Stack(
         children: [
-          // Login Screen Title - "Lover"
-          AnimatedPositioned(
-              duration: const Duration(milliseconds: 500),
-              top: _isAnimate ? mq.height * .4 : mq.height * .6,
-              right: mq.width * 0.35,
-              width: mq.width * 0.5,
-              child: const Text("Lover", style: TextStyle(color: Colors.white, fontSize: 30))),
           // Login Screen Title - "TALE"
-          AnimatedPositioned(
-              duration: const Duration(milliseconds: 500),
-              top: _isAnimate ? mq.height * .45 : mq.height * .65,
-              right: _isAnimate ? mq.width * 0.25 : mq.width * .25,
-              width: mq.width * 0.5,
-              child: const Text("TALE", style: TextStyle(color: Colors.white, fontSize: 30))),
+          Positioned(
+            left: 0,
+            top: 0,
+            child: SvgPicture.asset('assets/common/login.svg'),
+          ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 애플 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/apple_logo.png', // 카카오 로고 이미지 경로
+                        'assets/logo/apple_logo.png', // 카카오 로고 이미지 경로
                         height: 24,
                       ),
                       SizedBox(width: mq.width * .07),
@@ -269,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/kakao_logo.png', // 카카오 로고 이미지 경로
+                        'assets/logo/kakao_logo.png', // 카카오 로고 이미지 경로
                         height: 24,
                       ),
                       SizedBox(width: mq.width * .07),
@@ -310,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/google_logo.png', // 구글 로고 이미지 경로
+                        'assets/logo/google_logo.png', // 구글 로고 이미지 경로
                         height: 24,
                       ),
                       SizedBox(width: mq.width * .07),
