@@ -6,6 +6,7 @@ import 'package:flutter_lover_tale/screens/initial/couple_request_screen.dart';
 
 import '../../apis/apis.dart';
 import '../../main.dart';
+import '../../models/couple_request_model.dart';
 import '../auth/login_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -50,8 +51,8 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
           onPressed: () async {
             // 비동기 작업 2: Firebase 로그아웃
             await APIs.auth.signOut();
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
           },
         ),
         backgroundColor: const Color.fromRGBO(56, 56, 60, 1), // Sign Couple Screen backgroundColor
@@ -59,9 +60,39 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
         // ┃  AppBar  ┃
         // ┗━━━━━━━━━━┛
         appBar: AppBar(
-          actions: [IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const CoupleRequestScreen()));
-          }, icon: const Icon(Icons.mail))],
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (_) => const CoupleRequestScreen()));
+                    },
+                    icon: const Icon(Icons.mail)),
+                StreamBuilder(
+                    stream: UserAPIs.getMyCoupleRequest(),
+                    builder: (context, snapshot) {
+                      final data = snapshot.data?.docs;
+                      final list = data?.map((e) => CoupleReq.fromJson(e.data())).toList() ?? [];
+                      return Positioned(
+                        left: 4,
+                        top: 4,
+                        child: Container(
+                          padding: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: list.isNotEmpty ? Colors.red : null,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 10,
+                            minHeight: 10,
+                          ),
+                        ),
+                      );
+                    }),
+              ],
+            )
+          ],
         ),
         // ┏━━━━━━━━┓
         // ┃  Body  ┃

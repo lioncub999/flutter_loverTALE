@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/models/couple_request_model.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
+import 'package:flutter_lover_tale/widgets/couple_req_card.dart';
 
 import '../../apis/apis.dart';
 import '../../apis/user_apis.dart';
@@ -77,7 +78,7 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
                               List<ModuUser> users =
                                   data?.map((e) => ModuUser.fromJson(e.data())).toList() ?? [];
                               if (users.isNotEmpty) {
-                                return Text(users[0].name, style: const TextStyle(color: Colors.white),);
+                                return CoupleReqCard(user : users[0]);
                               } else {
                                 return const Center(
                                     child: Text(

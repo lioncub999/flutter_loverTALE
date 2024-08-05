@@ -18,7 +18,7 @@ class CoupleReq {
 
   CoupleReq.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? '';
-    fromId = json['fromId'] ?? '';
+    fromId = json['from_id'] ?? '';
     creDtm = json['cre_dtm'] ?? '';
     member = json['member'] != null ? List<String>.from(json['member']) : []; // 리스트 초기화
   }
@@ -26,7 +26,7 @@ class CoupleReq {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
-    data['fromId'] = fromId;
+    data['from_id'] = fromId;
     data['cre_dtm'] = creDtm;
     data['member'] = member;
     return data;

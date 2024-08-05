@@ -89,6 +89,7 @@ class UserAPIs {
     return APIs.fireStore
         .collection('CL_COUPLE_REQ')
         .where('member', arrayContains: APIs.user.uid)
+        .where('from_id', isNotEqualTo: APIs.user.uid)
         .snapshots();
   }
 }
