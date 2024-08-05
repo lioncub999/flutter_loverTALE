@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -24,9 +25,15 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   // 로그인 애니메이션 관리
   bool _isAnimate = false;
+  late Timer _periodicTimer;
+  late Timer _stopTimer;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  int _dayCount = 1;
+
 
   // ┏━━━━━━━━━━━━━━━┓
   // ┃   initState   ┃
@@ -34,13 +41,56 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _startTimer();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    );
+
+    _animation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    // 애니메이션 시작
+    _controller.forward();
     // 0.5 초 Duration 으로 애니메이션
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
         _isAnimate = true;
       });
     });
   }
+
+  void _startTimer() {
+    // 1초 간격으로 함수 실행
+    _periodicTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      _executeFunction();
+    });
+
+    // 5초 후에 타이머 취소
+    _stopTimer = Timer(const Duration(seconds: 5), () {
+      _periodicTimer.cancel();
+    });
+  }
+
+  void _executeFunction() {
+    setState(() {
+      _dayCount += 1;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _periodicTimer.cancel();
+    _stopTimer.cancel();
+    super.dispose();
+  }
+
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   로그인 버튼 클릭   ┃
@@ -195,19 +245,52 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: const Color.fromRGBO(245, 245, 245, 1), // Login Screen backgroundColor
       body: Stack(
         children: [
-          // Login Screen Title - "TALE"
+          // Login Screen Title - D-Day
           Positioned(
-            left: 0,
-            top: 0,
-            child: SvgPicture.asset('assets/common/login.svg'),
+            top: mq.height * .1,
+            child: SizedBox(
+              width: mq.width,
+              child: Center(
+                child: Opacity(
+                  opacity: _animation.value,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("D+",
+                        style: TextStyle(color: Color.fromRGBO(209, 209, 209, .5), fontSize: 100),),
+                      AnimatedFlipCounter(
+                        value: _dayCount,
+                        textStyle: const TextStyle(fontSize: 100, color: Color.fromRGBO(209, 209, 209, .5)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Login Screen Title - 로고
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 1000),
+            top: _isAnimate ? mq.height * .15 : mq.height * -.5,
+            child: SizedBox(
+              width: mq.width,
+              child: Center(
+                child: Image.asset('assets/common/logo.png', width: mq.width * .5,),
+              ),
+            ),
+          ),
+          // Login Screen Title - "함께 러버테일에 로그인해 주세요"
+          Positioned(
+            left: mq.width * .07,
+            top: mq.height * .35,
+            child: Image.asset('assets/common/loginTitle.png', width: mq.width * .8,),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 애플 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 1000),
+          Positioned(
             top: mq.height * .7,
-            left: _isAnimate ? mq.width * .05 : mq.width * 1,
+            left: mq.width * .05,
             child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
@@ -221,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     padding:
-                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                    EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -246,10 +329,9 @@ class _LoginScreenState extends State<LoginScreen> {
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 카카오 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 1000),
+          Positioned(
             top: mq.height * .78,
-            left: _isAnimate ? mq.width * .05 : mq.width * 1,
+            left: mq.width * .05,
             child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
@@ -263,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     padding:
-                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                    EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -288,10 +370,9 @@ class _LoginScreenState extends State<LoginScreen> {
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 구글 로그인 버튼    ┃
           // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 1000),
+          Positioned(
             top: mq.height * .86,
-            left: _isAnimate ? mq.width * .05 : mq.width * 1,
+            left: mq.width * .05,
             child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
@@ -304,7 +385,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     padding:
-                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                    EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
