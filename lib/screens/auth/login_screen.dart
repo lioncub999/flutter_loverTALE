@@ -26,14 +26,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-  // 로그인 애니메이션 관리
+  // 애니메이션 관리
   bool _isAnimate = false;
+
+  // D-day + 관련 TIMER
   late Timer _periodicTimer;
   late Timer _stopTimer;
+
+  // D-day opacity 처리
   late AnimationController _controller;
   late Animation<double> _animation;
-  int _dayCount = 1;
 
+  // D-day initialize
+  int _dayCount = 1;
 
   // ┏━━━━━━━━━━━━━━━┓
   // ┃   initState   ┃
@@ -41,12 +46,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
+    // D-Day + 시작
     _startTimer();
+
+    // D-Day Opacity 1 -> 0 5초
     _controller = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     );
-
     _animation = Tween<double>(
       begin: 1.0,
       end: 0.0,
@@ -55,9 +62,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         setState(() {});
       });
 
-    // 애니메이션 시작
+    // D-day Opacity 애니메이션 시작
     _controller.forward();
-    // 0.5 초 Duration 으로 애니메이션
+    // 1.5 초 Duration 으로 애니메이션
     Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
         _isAnimate = true;
@@ -66,23 +73,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   void _startTimer() {
-    // 1초 간격으로 함수 실행
+    // 100밀리초 간격으로 함수 실행
     _periodicTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _executeFunction();
     });
 
-    // 5초 후에 타이머 취소
+    // 5초 후에 타이머 종료
     _stopTimer = Timer(const Duration(seconds: 5), () {
       _periodicTimer.cancel();
     });
   }
 
+  // _dayCount +1
   void _executeFunction() {
     setState(() {
       _dayCount += 1;
     });
   }
 
+  // ┏━━━━━━━━━━━━━┓
+  // ┃   dispose   ┃
+  // ┗━━━━━━━━━━━━━┛
   @override
   void dispose() {
     _controller.dispose();
@@ -90,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     _stopTimer.cancel();
     super.dispose();
   }
-
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   로그인 버튼 클릭   ┃
@@ -243,6 +253,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 245, 245, 1), // Login Screen backgroundColor
+      // ┏━━━━━━━━┓
+      // ┃  Body  ┃
+      // ┗━━━━━━━━┛
       body: Stack(
         children: [
           // Login Screen Title - D-Day
@@ -256,11 +269,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("D+",
-                        style: TextStyle(color: Color.fromRGBO(209, 209, 209, .5), fontSize: 100),),
+                      // D-Day - Text - "D+"
+                      const Text(
+                        "D+",
+                        style: TextStyle(
+                            color: Color.fromRGBO(209, 209, 209, .5),
+                            fontSize: 100,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      // D-Day - Text - NUMBER
                       AnimatedFlipCounter(
                         value: _dayCount,
-                        textStyle: const TextStyle(fontSize: 100, color: Color.fromRGBO(209, 209, 209, .5)),
+                        textStyle: const TextStyle(
+                            fontSize: 100,
+                            color: Color.fromRGBO(209, 209, 209, .5),
+                            fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
@@ -268,22 +291,28 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               ),
             ),
           ),
-          // Login Screen Title - 로고
+          // Login Screen Title - 로고 이미지
           AnimatedPositioned(
             duration: const Duration(milliseconds: 1000),
             top: _isAnimate ? mq.height * .15 : mq.height * -.5,
             child: SizedBox(
               width: mq.width,
               child: Center(
-                child: Image.asset('assets/common/logo.png', width: mq.width * .5,),
+                child: Image.asset(
+                  'assets/common/logo.png',
+                  width: mq.width * .5,
+                ),
               ),
             ),
           ),
-          // Login Screen Title - "함께 러버테일에 로그인해 주세요"
+          // Login Screen Title - "함께 러버테일에 로그인해 주세요(통 이미지)"
           Positioned(
             left: mq.width * .07,
             top: mq.height * .35,
-            child: Image.asset('assets/common/loginTitle.png', width: mq.width * .8,),
+            child: Image.asset(
+              'assets/common/loginTitle.png',
+              width: mq.width * .8,
+            ),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 애플 로그인 버튼    ┃
@@ -304,7 +333,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     padding:
-                    EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -345,7 +374,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     padding:
-                    EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -381,11 +410,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     await _handleLoginBtnClick("GOOGLE");
                   },
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(245, 245, 245, 1.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     padding:
-                    EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
