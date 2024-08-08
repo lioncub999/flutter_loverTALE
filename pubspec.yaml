@@ -47,6 +47,7 @@ dependencies:
 
   #디자인 관련
   animated_flip_counter: ^0.3.4
+  dynamic_tabbar: ^1.0.7
 
 
 dev_dependencies:
