@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/apis/user_apis.dart';
 import 'package:flutter_lover_tale/helper/custom_dialogs.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
+import 'package:flutter_lover_tale/screens/home_screen.dart';
 import 'package:flutter_lover_tale/screens/initial/couple_request_screen.dart';
 
 import '../../apis/apis.dart';
@@ -47,12 +48,11 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: const Text("로그아웃임시"),
+          child: const Text("다음에하기 임시"),
           onPressed: () async {
             // 비동기 작업 2: Firebase 로그아웃
-            await APIs.auth.signOut();
             Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+                context, MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false);
           },
         ),
         backgroundColor: const Color.fromRGBO(56, 56, 60, 1), // Sign Couple Screen backgroundColor
@@ -72,7 +72,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                 StreamBuilder(
                     stream: UserAPIs.getMyCoupleRequest(),
                     builder: (context, snapshot) {
-                      final data = snapshot.data?.docs;
+                      final data = snapshot.data;
                       final list = data?.map((e) => CoupleReq.fromJson(e.data())).toList() ?? [];
                       return Positioned(
                         left: 4,
@@ -184,7 +184,6 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                           image: '',
                           createdAt: '',
                           email: '',
-                          isDefaultInfoSet: false,
                           pushToken: '',
                           partnerId: '');
                       if (_textController.text == APIs.user.uid) {

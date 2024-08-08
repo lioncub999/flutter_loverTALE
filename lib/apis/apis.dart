@@ -78,7 +78,6 @@ class APIs {
         pushToken: '',
         gender : '',
         birthDay : '',
-        isDefaultInfoSet: false,
         email: user!.email.toString(),
         partnerId : '',
     );

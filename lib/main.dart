@@ -56,15 +56,14 @@ void main() async {
           splashFactory: NoSplash.splashFactory,
           // 앱바 공통 Theme
           appBarTheme: const AppBarTheme(
-              backgroundColor: Color.fromRGBO(92, 97, 103, 1),
+              backgroundColor: Color.fromRGBO(245, 245, 245, 1),
               centerTitle: true,
-              elevation: 1,
               titleTextStyle: TextStyle(
-                color: Colors.white,
+                color: Color.fromRGBO(109, 109, 109, 1),
                 fontWeight: FontWeight.w700,
                 fontSize: 19,
               ),
-              iconTheme: IconThemeData(color: Colors.white)),
+              iconTheme: IconThemeData(color: Color.fromRGBO(109, 109, 109, 1))),
           // 공통 폰트
           fontFamily: 'Pretendard',
           // 하단바 공통 Theme

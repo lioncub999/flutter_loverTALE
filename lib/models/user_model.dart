@@ -12,7 +12,6 @@ class ModuUser {
     required this.image,                  // 프로필 이미지
     required this.createdAt,              // 계정 생성일
     required this.email,                  // 이메일
-    required this.isDefaultInfoSet,       // 기본 정보 입력 완료 여부
     required this.pushToken,              // 푸시 알림용 토큰
     required this.partnerId,              // 파트너 아이디
   });
@@ -24,7 +23,6 @@ class ModuUser {
   late String image;
   late String createdAt;
   late String email;
-  late bool isDefaultInfoSet;
   late String pushToken;
   late String partnerId;
 
@@ -36,7 +34,6 @@ class ModuUser {
     createdAt = json['created_at'] ?? '';
     id = json['id'] ?? '';
     email = json['email'] ?? '';
-    isDefaultInfoSet = json['is_default_info_set'] ?? false;
     pushToken = json['push_token'] ?? '';
     partnerId = json['partner_id'] ?? '';
   }
@@ -50,7 +47,6 @@ class ModuUser {
     data['created_at'] = createdAt;
     data['id'] = id;
     data['email'] = email;
-    data['is_default_info_set'] = isDefaultInfoSet;
     data['push_token'] = pushToken;
     data['partner_id'] = partnerId;
     return data;

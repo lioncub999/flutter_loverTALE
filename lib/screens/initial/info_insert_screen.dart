@@ -2,17 +2,21 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../apis/apis.dart';
 import '../../apis/user_apis.dart';
 import '../../main.dart';
 import '../../models/user_model.dart';
+import '../auth/login_screen.dart';
 import '../home_screen.dart';
 
-// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-// ┃                                                                            ┃
-// ┃                             기본정보 입력 화면                             ┃
-// ┃                                                                            ┃
-// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃                                                                             ┃
+// ┃                             기본 정보 입력 화면                             ┃
+// ┃                                                                             ┃
+// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class InfoInsertScreen extends StatefulWidget {
   const InfoInsertScreen({super.key});
 
@@ -25,25 +29,55 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
   int _selectedGender = 0;
 
   // 생일 선택
+  late bool _isDateSelected = false;
   DateTime _selectedDate = DateTime.now();
 
-  // ios 날짜 선택 UI
+  // 포커스 노드
+  final FocusNode _focusNode = FocusNode();
+
+  // 채팅창 TextField 컨트롤러
+  final _textController = TextEditingController(text: APIs.me.name);
+
+  // ┏━━━━━━━━━━━━━━━┓
+  // ┃   initState   ┃
+  // ┗━━━━━━━━━━━━━━━┛
+  @override
+  void initState() {
+    super.initState();
+    _textController.addListener(_onTextChanged);
+  }
+
+  // 텍스트 필드 입력시 스테이트 업데이트
+  void _onTextChanged() {
+    setState(() {});
+  }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   포커스 노드 제거   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━┛
+  @override
+  void dispose() {
+    _textController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   ios 날짜 선택 UI   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━┛
   void _showCupertinoDatePicker(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext builder) {
           return SizedBox(
-            height: MediaQuery
-                .of(context)
-                .copyWith()
-                .size
-                .height / 3,
+            height: MediaQuery.of(context).copyWith().size.height / 3,
             child: CupertinoDatePicker(
               initialDateTime: _selectedDate,
               mode: CupertinoDatePickerMode.date,
               onDateTimeChanged: (DateTime newDate) {
                 setState(() {
                   _selectedDate = newDate;
+                  _isDateSelected = true;
                 });
               },
             ),
@@ -51,32 +85,29 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
         });
   }
 
-  // 라디오 버튼 UI
+  // ┏━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   라디오 버튼 UI   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━┛
   Widget _buildCustomRadioButton(int value, String text, String gender) {
     bool isSelected = _selectedGender == value;
-
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedGender = value;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? gender == 'M'
-              ? Colors.blue
-              : Colors.pink
-              : Colors.grey[200],
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-          ),
+    return SizedBox(
+      width: mq.width * .3,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _selectedGender = value;
+          });
+        },
+        child: Row(
+          children: [
+            isSelected
+                ? SvgPicture.asset('assets/common/checkboxChecked.svg')
+                : SvgPicture.asset('assets/common/checkbox.svg'),
+            Text(
+              text,
+              style: const TextStyle(color: Color.fromRGBO(109, 109, 109, 1), fontSize: 18),
+            )
+          ],
         ),
       ),
     );
@@ -118,114 +149,263 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromRGBO(56, 56, 60, 1), // LoginScreen backgroundColor
-        // ┏━━━━━━━━┓
-        // ┃  Body  ┃
-        // ┗━━━━━━━━┛
-        body: SizedBox(
+      appBar: AppBar(
+        title: const Text("기본 정보 입력"),
+        actions: [
+          IconButton(onPressed: () async {
+            // 비동기 작업 2: Firebase 로그아웃
+            await APIs.auth.signOut();
+            Navigator.pushAndRemoveUntil(
+                context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+          }, icon: const Icon(Icons.clear))
+        ],
+      ),
+      backgroundColor: const Color.fromRGBO(245, 245, 245, 1), // LoginScreen backgroundColor
+      // ┏━━━━━━━━┓
+      // ┃  Body  ┃
+      // ┗━━━━━━━━┛
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          _focusNode.unfocus();
+        },
+        child: SizedBox(
           width: mq.width,
           height: mq.height,
-          // 화면 요소
           child: Column(
             children: [
-              // 타이틀 위쪽 여백
+              // 위쪽 여백
               SizedBox(
                 width: mq.width,
-                height: mq.height * .2,
+                height: mq.height * .04,
               ),
-              // 타이틀 박스
+              // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+              // ┃  Body - 이름 입력 TextField ┃
+              // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
               SizedBox(
-                height: mq.height * .1,
-                child: const Text(
-                  "사용자 정보 입력 화면",
-                  style: TextStyle(color: Colors.white, fontSize: 30),
+                width: mq.width * .85,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 이름 - TEXT
+                    Container(
+                      padding: EdgeInsets.only(left: mq.width * .05),
+                      child: const Text("이름",
+                          style: TextStyle(
+                              color: Color.fromRGBO(109, 109, 109, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16)),
+                    ),
+                    // 이름 - TEXT FIELD
+                    Card(
+                      color: const Color.fromRGBO(230, 230, 230, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 0,
+                      child: SizedBox(
+                        width: mq.width,
+                        height: mq.height * .05,
+                        child: Stack(
+                          children: [
+                            TextField(
+
+                              inputFormatters: [_LengthLimitingTextInputFormatterFixed(20)],
+                              focusNode: _focusNode,
+                              controller: _textController,
+                              style: const TextStyle(fontSize: 16, letterSpacing: -0.24),
+                              decoration: InputDecoration(
+                                hintText: '이름 (최대 20자)',
+                                hintStyle: const TextStyle(
+                                    color: Color.fromRGBO(188, 188, 188, 1), fontSize: 16),
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.only(
+                                    left: mq.width * .04,
+                                    right: mq.width * .1,
+                                    top: mq.height * .01,
+                                    bottom: mq.height * .01),
+                              ),
+                            ),
+                            // TEXT FIELD 초기화 버튼
+                            _textController.text != ''
+                                ? Positioned(
+                                    top: -mq.height * .002,
+                                    right: 0,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.cancel,
+                                        color: Color.fromRGBO(188, 188, 188, 1),
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        _textController.clear();
+                                        setState(() {});
+                                      },
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
+              ),
+              // 여백
+              SizedBox(
+                width: mq.width,
+                height: mq.height * .03,
               ),
               // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
               // ┃  Body - 성별 선택 RADIO   ┃
               // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
               SizedBox(
-                height: mq.height * .05,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _buildCustomRadioButton(0, '남자', 'M'),
-                    const SizedBox(width: 10),
-                    _buildCustomRadioButton(1, '여자', 'G'),
+                width: mq.width * .85,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(left: mq.width * .03),
+                      child: const Text("성별",
+                          style: TextStyle(
+                              color: Color.fromRGBO(109, 109, 109, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16)),
+                    ),
+                    Container(
+                      height: mq.height * .05,
+                      margin: EdgeInsets.only(left: mq.width * .04, top: mq.height * .005),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _buildCustomRadioButton(0, '남성', 'M'),
+                          const SizedBox(width: 10),
+                          _buildCustomRadioButton(1, '여성', 'G'),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
+              ),
+              // 여백
+              SizedBox(
+                width: mq.width,
+                height: mq.height * .03,
               ),
               // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
               // ┃  Body - 생일 선택         ┃
               // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
               SizedBox(
+                width: mq.width * .85,
                 height: mq.height * .15,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(left: mq.width * .03),
+                      child: const Text("생년월일",
+                          style: TextStyle(
+                              color: Color.fromRGBO(109, 109, 109, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16)),
+                    ),
                     GestureDetector(
                       onTap: () => _showCupertinoDatePicker(context),
-
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: const Text(
-                          'Select Date',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
+                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    Text(
-                      'Selected Date: ${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day}',
-                      style: const TextStyle(fontSize: 16.0, color: Colors.white),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _isDateSelected
+                                  ? Text(
+                                      '${_selectedDate.year}년 ${_selectedDate.month}월 ${_selectedDate.day}일',
+                                      style: const TextStyle(
+                                          fontSize: 16.0, color: Color.fromRGBO(109, 109, 109, 1)),
+                                    )
+                                  : const Text(
+                                      '내 생일을 선택 해주세요.',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(109, 109, 109, 1),
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                              SvgPicture.asset('assets/common/arrowBottom.svg')
+                            ],
+                          )),
                     ),
                   ],
                 ),
               ),
-              // ┏━━━━━━━━━━━━━━━━━━━━━┓
-              // ┃  Body - 저장 버튼   ┃
-              // ┗━━━━━━━━━━━━━━━━━━━━━┛
-              SizedBox(
-                  width: mq.width * 0.9,
-                  height: mq.height * 0.06,
-                  child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, // Btn-BackgroundColor
-                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))), // Btn-Shape
-                      ),
-                      onPressed: () async {
-                        final birthDay = _selectedDate.millisecondsSinceEpoch.toString();
-                        ModuUser user = ModuUser(
-                            image: '',
-                            gender: _selectedGender == 0 ? 'M' : 'G',
-                            name: '',
-                            birthDay: birthDay,
-                            createdAt: '',
-                            id: '',
-                            email: '',
-                            isDefaultInfoSet: true,
-                            pushToken: '',
-                            partnerId: '',
-                        );
-
-                        await UserAPIs.updateUserDefaultInfo(user);
-                        Navigator.pushReplacement(context, _moveHomeRoute());
-                      },
-                      // LoginBtn-Element
-                      label: RichText(
-                        text: const TextSpan(style: TextStyle(color: Colors.black, fontSize: 16), children: [
-                          TextSpan(text: '저장 '),
-                        ]),
-                      )))
             ],
           ),
-        ));
+        ),
+      ),
+      // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+      // ┃  BottomSheet - 시작하기 버튼   ┃
+      // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+      bottomSheet: SizedBox(
+          width: mq.width,
+          height: mq.height * 0.08,
+          child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _textController.text != '' && _isDateSelected
+                    ? const Color.fromRGBO(255, 135, 81, 1)
+                    : const Color.fromRGBO(181, 181, 181, 1), // Btn-BackgroundColor
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(0))), // Btn-Shape
+              ),
+              onPressed: _textController.text != '' && _isDateSelected
+                  ? () async {
+                      final birthDay = _selectedDate.millisecondsSinceEpoch.toString();
+                      ModuUser user = ModuUser(
+                        image: '',
+                        gender: _selectedGender == 0 ? 'M' : 'G',
+                        name: _textController.text,
+                        birthDay: birthDay,
+                        createdAt: '',
+                        id: '',
+                        email: '',
+                        pushToken: '',
+                        partnerId: '',
+                      );
+                      try {
+                        await UserAPIs.updateUserDefaultInfo(user);
+                      } catch (e) {
+                        rethrow;
+                      }
+                      Navigator.pushReplacement(context, _moveHomeRoute());
+                    }
+                  : () {},
+              // 로그인 버튼
+              label: RichText(
+                text:
+                    const TextSpan(style: TextStyle(color: Colors.black, fontSize: 16), children: [
+                  TextSpan(
+                      text: '시작하기',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w800, fontSize: 25)),
+                ]),
+              ))),
+    );
+  }
+}
+
+// 글자수 오버 방지
+class _LengthLimitingTextInputFormatterFixed extends TextInputFormatter {
+  final int maxLength;
+
+  _LengthLimitingTextInputFormatterFixed(this.maxLength);
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.characters.length > maxLength) {
+      return oldValue;
+    }
+    return newValue;
   }
 }

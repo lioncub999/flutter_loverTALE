@@ -32,7 +32,7 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
       body: SizedBox(
         width: mq.width,
         height: mq.height,
-        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        child: StreamBuilder(
           stream: UserAPIs.getMyCoupleRequest(),
           builder: (context, coupleReqSnapshot) {
             switch (coupleReqSnapshot.connectionState) {
@@ -41,7 +41,7 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
                 return const Center(child: CircularProgressIndicator());
               case ConnectionState.active:
               case ConnectionState.done:
-                final data = coupleReqSnapshot.data?.docs;
+                final data = coupleReqSnapshot.data;
                 _reqList = data?.map((e) => CoupleReq.fromJson(e.data())).toList() ?? [];
                 return ListView.builder(
                   itemCount: _reqList.length,
@@ -54,7 +54,6 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
                         image: '',
                         createdAt: '',
                         email: '',
-                        isDefaultInfoSet: false,
                         pushToken: '',
                         partnerId: '');
                     // chatRoomList 의 member 리스트의 첫번째 ID가 나면 두번째 ID를 조회 parameter 저장

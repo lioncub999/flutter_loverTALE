@@ -17,7 +17,7 @@ class UserAPIs {
     APIs.fireStore
         .collection('CL_USER')
         .doc(APIs.user.uid)
-        .update({'is_default_info_set': true, 'gender': user.gender, 'birth_day': user.birthDay});
+        .update({'name' : user.name,'gender': user.gender, 'birth_day': user.birthDay});
   }
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -85,11 +85,13 @@ class UserAPIs {
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   ● 내게 온 요청 모두 조회                                           ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getMyCoupleRequest() {
+  static Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getMyCoupleRequest() {
     return APIs.fireStore
         .collection('CL_COUPLE_REQ')
         .where('member', arrayContains: APIs.user.uid)
-        .where('from_id', isNotEqualTo: APIs.user.uid)
-        .snapshots();
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.where((doc) => doc.data()['from_id'] != APIs.user.uid).toList();
+    });
   }
 }
