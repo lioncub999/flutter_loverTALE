@@ -1,6 +1,6 @@
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                                  ┃
-// ┃                                    UserModel                                     ┃
+// ┃                                CL_USER MODEL                                     ┃
 // ┃                                                                                  ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class ModuUser {
@@ -13,8 +13,8 @@ class ModuUser {
     required this.createdAt,              // 계정 생성일
     required this.email,                  // 이메일
     required this.pushToken,              // 푸시 알림용 토큰
-    required this.coupleId,              // 파트너 아이디
-    required this.userCode,
+    required this.coupleId,               // 파트너 아이디
+    required this.userCode,               // 커플 등록시 유저 초대 코드
   });
 
   late String id;

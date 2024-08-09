@@ -1,6 +1,6 @@
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                                  ┃
-// ┃                                    CoupleReq                                     ┃
+// ┃                               CL_COUPLE_REQ MODEL                                ┃
 // ┃                                                                                  ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class CoupleReq {
@@ -8,7 +8,7 @@ class CoupleReq {
     required this.id,                     // 고유 아이디
     required this.fromId,                 // 요청 보낸 사람 아이디
     required this.creDtm,                 // 요청 보낸 시간
-    required this.member,                 // 요청에 포함된 아이디
+    required this.member,                 // 요청에 포함된 아이디 리스트
   });
 
   late String id;
