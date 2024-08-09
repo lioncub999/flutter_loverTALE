@@ -49,6 +49,9 @@ dependencies:
   animated_flip_counter: ^0.3.4
   dynamic_tabbar: ^1.0.7
 
+  #uuid
+  uuid: ^4.4.2
+
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +67,7 @@ flutter:
     - assets/
     - assets/logo/
     - assets/common/
+    - assets/common/main/
 
   fonts:
     - family: Pretendard

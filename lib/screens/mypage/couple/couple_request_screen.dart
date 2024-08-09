@@ -4,9 +4,10 @@ import 'package:flutter_lover_tale/models/couple_request_model.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
 import 'package:flutter_lover_tale/widgets/couple_req_card.dart';
 
-import '../../apis/apis.dart';
-import '../../apis/user_apis.dart';
-import '../../main.dart';
+import '../../../apis/apis.dart';
+import '../../../apis/couple_apis.dart';
+import '../../../apis/user_apis.dart';
+import '../../../main.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                            ┃
@@ -33,7 +34,7 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
         width: mq.width,
         height: mq.height,
         child: StreamBuilder(
-          stream: UserAPIs.getMyCoupleRequest(),
+          stream: CoupleAPIs.getMyCoupleRequest(),
           builder: (context, coupleReqSnapshot) {
             switch (coupleReqSnapshot.connectionState) {
               case ConnectionState.waiting:
@@ -47,15 +48,17 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
                   itemCount: _reqList.length,
                   itemBuilder: (context, index) {
                     ModuUser partner = ModuUser(
-                        id: '',
-                        name: '',
-                        gender: '',
-                        birthDay: '',
-                        image: '',
-                        createdAt: '',
-                        email: '',
-                        pushToken: '',
-                        partnerId: '');
+                      id: '',
+                      name: '',
+                      gender: '',
+                      birthDay: '',
+                      image: '',
+                      createdAt: '',
+                      email: '',
+                      pushToken: '',
+                      coupleId: '',
+                      userCode: '',
+                    );
                     // chatRoomList 의 member 리스트의 첫번째 ID가 나면 두번째 ID를 조회 parameter 저장
                     if (_reqList[index].member[0] == APIs.me.id) {
                       partner.id = _reqList[index].member[1];
@@ -77,11 +80,11 @@ class _CoupleRequestScreenState extends State<CoupleRequestScreen> {
                               List<ModuUser> users =
                                   data?.map((e) => ModuUser.fromJson(e.data())).toList() ?? [];
                               if (users.isNotEmpty) {
-                                return CoupleReqCard(user : users[0]);
+                                return CoupleReqCard(user: users[0], req : _reqList[index] );
                               } else {
                                 return const Center(
                                     child: Text(
-                                  "유저가 존재 하지 않습니다.",
+                                  "아직 요청이 없어요~",
                                   style: TextStyle(color: Colors.white),
                                 ));
                               }

@@ -10,6 +10,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../apis/apis.dart';
+import '../../apis/user_apis.dart';
 import '../../helper/custom_dialogs.dart';
 import '../../main.dart';
 
@@ -205,11 +206,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   // ┃   로그인 정보 확인 후 DB에 있는지 확인 (없으면 INSERT)   ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   _checkUserExist() async {
-    if (await APIs.userExists()) {
+    if (await UserAPIs.userExists()) { // true : db에 데이터 있음.
+      await UserAPIs.logLoginHist();
       Navigator.of(context).pushReplacement(_moveHomeRoute());
       CustomDialogs.showSnackbar(context, '로그인 되었습니다');
     } else {
-      APIs.createUser().then((value) {
+      UserAPIs.createUser().then((value) async {
+        await UserAPIs.logLoginHist();
         Navigator.of(context).pushReplacement(_moveHomeRoute());
         CustomDialogs.showSnackbar(context, '로그인 되었습니다');
       });

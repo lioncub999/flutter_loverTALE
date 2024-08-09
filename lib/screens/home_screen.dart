@@ -1,12 +1,16 @@
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lover_tale/screens/histmap/hist_map_screen.dart';
 import 'package:flutter_lover_tale/screens/initial/info_insert_screen.dart';
 import 'package:flutter_lover_tale/screens/auth/login_screen.dart';
+import 'package:flutter_lover_tale/screens/mypage/mypage_screen.dart';
+import 'package:flutter_lover_tale/screens/story/story_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../apis/apis.dart';
+import '../apis/user_apis.dart';
 import '../main.dart';
-import 'initial/sign_couple_screen.dart';
+import 'main/main_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                            ┃
@@ -21,43 +25,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  // Tap 관리 State
   bool isScrollable = false;
   bool showNextIcon = false;
   bool showBackIcon = false;
 
+  // 탭 안에 들어갈 내용
   List<TabData> tabs = [
     TabData(
-      index: 1,
-      title: const Tab(
-        child: Text('홈'),
-      ),
-      content: Container(
-        color: const Color.fromRGBO(245, 245, 245, 1),
-      ),
-    ),
+        index: 1,
+        title: const Tab(
+          child: Text('     홈     '),
+        ),
+        content: const MainScreen()),
     TabData(
       index: 2,
       title: const Tab(
-        child: Text('이야기'),
+        child: Text('  이야기  '),
       ),
-      content: const Center(child: Text('Content for Tab 2')),
+      content: const StoryScreen(),
     ),
     TabData(
       index: 2,
       title: const Tab(
         child: Text('추억지도'),
       ),
-      content: const Center(child: Text('Content for Tab 2')),
+      content: const HistMapScreen(),
     ),
     TabData(
       index: 2,
       title: const Tab(
-        child: Text('내정보'),
+        child: Text('  내정보  '),
       ),
-      content: const Center(child: Text('Content for Tab 2')),
+      content: const MypageScreen(),
     ),
-    // Add more tabs as needed
   ];
+
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
   // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
@@ -69,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // ┃  현재 로그인 유저 정보 확인을 위한 FutureBuilder  ┃
     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
     return FutureBuilder(
-        future: APIs.getSelfInfo(),
+        future: UserAPIs.getSelfInfo(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
@@ -90,7 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
             // ┗━━━━━━━━━━━━━━━━━━━━━━┛
             if (APIs.me.gender.isNotEmpty && APIs.me.birthDay.isNotEmpty) {
               return Scaffold(
+                // ┏━━━━━━━━━━━━┓
+                // ┃   AppBar   ┃
+                // ┗━━━━━━━━━━━━┛
                 appBar: AppBar(
+                  // AppBar - Leading
                   leading: Container(
                     padding: const EdgeInsets.all(8.0), // 필요한 만큼의 패딩을 추가
                     alignment: Alignment.center, // 로고를 가운데로 정렬
@@ -100,44 +113,47 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 18,
                     ),
                   ),
+                  // AppBar - Title
                   title: const Text("홈"),
+                  // AppBar - Action
                   actions: [
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.more_horiz))
+                    IconButton(
+                        onPressed: () async {
+                          // 비동기 작업 2: Firebase 로그아웃 임시
+                          await APIs.auth.signOut();
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => const LoginScreen()),
+                              (route) => false);
+                        },
+                        icon: const Icon(Icons.more_horiz))
                   ],
                 ),
-                body: SizedBox(
+                // ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+                // ┃   Body - Tap + 화면   ┃
+                // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
+                body: Container(
+                  color: const Color.fromRGBO(245, 245, 245, 1),
                   width: mq.width,
-                  height: mq.height,
                   child: Column(
-                   children: [
-                     Expanded(
-                       child: DynamicTabBarWidget(
-                         dividerHeight: 0,
-                         labelColor: const Color.fromRGBO(109, 109, 109, 1),
-                         unselectedLabelColor: const Color.fromRGBO(197, 197, 197, 1),
-                         indicatorColor: const Color.fromRGBO(109, 109, 109, 1),
-                         dynamicTabs: tabs,
-                         isScrollable: isScrollable,
-                         onTabControllerUpdated: (controller) {
-                         },
-                         onTabChanged: (index) {
-                         },
-                         onAddTabMoveTo: MoveToTab.last,
-                         showBackIcon: showBackIcon,
-                         showNextIcon: showNextIcon,
-                       ),
-                     ),
-                   ],
+                    children: [
+                      Expanded(
+                        child: DynamicTabBarWidget(
+                          dividerHeight: 0,
+                          labelColor: const Color.fromRGBO(109, 109, 109, 1),
+                          unselectedLabelColor: const Color.fromRGBO(197, 197, 197, 1),
+                          indicatorColor: const Color.fromRGBO(109, 109, 109, 1),
+                          dynamicTabs: tabs,
+                          isScrollable: isScrollable,
+                          onTabControllerUpdated: (controller) {},
+                          onTabChanged: (index) {},
+                          onAddTabMoveTo: MoveToTab.last,
+                          showBackIcon: showBackIcon,
+                          showNextIcon: showNextIcon,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                floatingActionButton: FloatingActionButton(
-                  child: const Text("로그아웃임시"),
-                  onPressed: () async {
-                    // 비동기 작업 2: Firebase 로그아웃
-                    await APIs.auth.signOut();
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
-                  },
                 ),
               );
             } else {

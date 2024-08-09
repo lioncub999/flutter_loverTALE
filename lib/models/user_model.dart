@@ -13,7 +13,8 @@ class ModuUser {
     required this.createdAt,              // 계정 생성일
     required this.email,                  // 이메일
     required this.pushToken,              // 푸시 알림용 토큰
-    required this.partnerId,              // 파트너 아이디
+    required this.coupleId,              // 파트너 아이디
+    required this.userCode,
   });
 
   late String id;
@@ -24,7 +25,8 @@ class ModuUser {
   late String createdAt;
   late String email;
   late String pushToken;
-  late String partnerId;
+  late String coupleId;
+  late String userCode;
 
   ModuUser.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
@@ -35,7 +37,8 @@ class ModuUser {
     id = json['id'] ?? '';
     email = json['email'] ?? '';
     pushToken = json['push_token'] ?? '';
-    partnerId = json['partner_id'] ?? '';
+    coupleId = json['couple_id'] ?? '';
+    userCode = json['user_code'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -48,7 +51,8 @@ class ModuUser {
     data['id'] = id;
     data['email'] = email;
     data['push_token'] = pushToken;
-    data['partner_id'] = partnerId;
+    data['couple_id'] = coupleId;
+    data['user_code'] = userCode;
     return data;
   }
 }

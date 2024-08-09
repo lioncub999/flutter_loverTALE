@@ -26,7 +26,7 @@ class InfoInsertScreen extends StatefulWidget {
 
 class _InfoInsertScreenState extends State<InfoInsertScreen> {
   // 성별 선택
-  int _selectedGender = 0;
+  late String _selectedGender = 'M';
 
   // 생일 선택
   late bool _isDateSelected = false;
@@ -88,14 +88,14 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
   // ┏━━━━━━━━━━━━━━━━━━━━┓
   // ┃   라디오 버튼 UI   ┃
   // ┗━━━━━━━━━━━━━━━━━━━━┛
-  Widget _buildCustomRadioButton(int value, String text, String gender) {
-    bool isSelected = _selectedGender == value;
+  Widget _buildCustomRadioButton(String text, String gender) {
+    bool isSelected = _selectedGender == gender;
     return SizedBox(
       width: mq.width * .3,
       child: InkWell(
         onTap: () {
           setState(() {
-            _selectedGender = value;
+            _selectedGender = gender;
           });
         },
         child: Row(
@@ -279,9 +279,9 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          _buildCustomRadioButton(0, '남성', 'M'),
+                          _buildCustomRadioButton('남성', 'M'),
                           const SizedBox(width: 10),
-                          _buildCustomRadioButton(1, '여성', 'G'),
+                          _buildCustomRadioButton('여성', 'G'),
                         ],
                       ),
                     ),
@@ -371,7 +371,8 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                         id: '',
                         email: '',
                         pushToken: '',
-                        partnerId: '',
+                        coupleId: '',
+                        userCode: '',
                       );
                       try {
                         await UserAPIs.updateUserDefaultInfo(user);

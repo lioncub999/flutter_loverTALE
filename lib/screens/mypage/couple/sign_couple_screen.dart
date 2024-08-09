@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lover_tale/apis/couple_apis.dart';
 import 'package:flutter_lover_tale/apis/user_apis.dart';
 import 'package:flutter_lover_tale/helper/custom_dialogs.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
-import 'package:flutter_lover_tale/screens/initial/couple_request_screen.dart';
+import 'package:flutter_lover_tale/screens/mypage/couple/couple_request_screen.dart';
 
-import '../../apis/apis.dart';
-import '../../main.dart';
-import '../../models/couple_request_model.dart';
-import '../auth/login_screen.dart';
+import '../../../apis/apis.dart';
+import '../../../main.dart';
+import '../../../models/couple_request_model.dart';
+import '../../auth/login_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                            ┃
@@ -70,7 +71,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                     },
                     icon: const Icon(Icons.mail)),
                 StreamBuilder(
-                    stream: UserAPIs.getMyCoupleRequest(),
+                    stream: CoupleAPIs.getMyCoupleRequest(),
                     builder: (context, snapshot) {
                       final data = snapshot.data;
                       final list = data?.map((e) => CoupleReq.fromJson(e.data())).toList() ?? [];
@@ -129,12 +130,12 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                   ),
                 ),
                 Container(
-                  width: mq.width * .8,
+                  width: mq.width ,
                   height: 50,
                   color: Colors.amberAccent,
                   child: Row(
                     children: [
-                      Text(APIs.me.id),
+                      Text(APIs.me.userCode),
                       IconButton(onPressed: () {}, icon: const Icon(Icons.copy))
                     ],
                   ),
@@ -177,27 +178,29 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                 ElevatedButton(
                     onPressed: () async {
                       ModuUser partner = ModuUser(
-                          id: _textController.text,
-                          name: '',
-                          gender: '',
-                          birthDay: '',
-                          image: '',
-                          createdAt: '',
-                          email: '',
-                          pushToken: '',
-                          partnerId: '');
-                      if (_textController.text == APIs.user.uid) {
+                        id: '',
+                        name: '',
+                        gender: '',
+                        birthDay: '',
+                        image: '',
+                        createdAt: '',
+                        email: '',
+                        pushToken: '',
+                        coupleId: '',
+                        userCode: _textController.text,
+                      );
+                      if (_textController.text == APIs.me.userCode) {
                         CustomDialogs.showSnackbar(context, "나에게 보낼 수는 없어요~.~.");
                       } else {
-                        if (await UserAPIs.checkUserCouple(partner)) {
-                          await UserAPIs.sendCoupleRequest(partner);
+                        if (await CoupleAPIs.checkUserCouple(partner)) {
+                          await CoupleAPIs.sendCoupleRequest(partner);
                           CustomDialogs.showSnackbar(context, "요청이 전송 되었습니다.");
                         } else {
                           CustomDialogs.showSnackbar(context, "코드를 확인 해주세요");
                         }
                       }
                     },
-                    child: const Text("등록"))
+                    child: const Text("요청 보내기"))
               ],
             ),
           ),
