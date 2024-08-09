@@ -206,7 +206,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   // ┃   로그인 정보 확인 후 DB에 있는지 확인 (없으면 INSERT)   ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   _checkUserExist() async {
-    if (await UserAPIs.userExists()) { // true : db에 데이터 있음.
+    if (await UserAPIs.userExists()) {
+      // true : db에 데이터 있음.
       await UserAPIs.logLoginHist();
       Navigator.of(context).pushReplacement(_moveHomeRoute());
       CustomDialogs.showSnackbar(context, '로그인 되었습니다');
@@ -326,37 +327,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await _handleLoginBtnClick("APPLE");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/logo/apple_logo.png', // 카카오 로고 이미지 경로
-                        height: 24,
-                      ),
-                      SizedBox(width: mq.width * .07),
-                      const Text(
-                        '애플 아이디로 로그인',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+                child: _customLoginButton("APPLE")),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 카카오 로그인 버튼    ┃
@@ -367,37 +338,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await _handleLoginBtnClick("KAKAO");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(252, 215, 50, 1.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/logo/kakao_logo.png', // 카카오 로고 이미지 경로
-                        height: 24,
-                      ),
-                      SizedBox(width: mq.width * .07),
-                      const Text(
-                        '카카오 아이디로 로그인',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+                child: _customLoginButton("KAKAO")),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 구글 로그인 버튼    ┃
@@ -408,38 +349,65 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             child: SizedBox(
                 width: mq.width * 0.9,
                 height: mq.height * 0.06,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await _handleLoginBtnClick("GOOGLE");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(245, 245, 245, 1.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/logo/google_logo.png', // 구글 로고 이미지 경로
-                        height: 24,
-                      ),
-                      SizedBox(width: mq.width * .07),
-                      const Text(
-                        '구글 아이디로 로그인',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+                child: _customLoginButton("GOOGLE")),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _customLoginButton(String platform) {
+    return ElevatedButton(
+      onPressed: () async {
+        await _handleLoginBtnClick(platform);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: platform == "APPLE"
+            ? const Color.fromRGBO(0, 0, 0, 1.0)
+            : platform == "KAKAO"
+                ? const Color.fromRGBO(252, 215, 50, 1.0)
+                : platform == "GOOGLE"
+                    ? const Color.fromRGBO(245, 245, 245, 1.0)
+                    : const Color.fromRGBO(245, 245, 245, 1.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: mq.width * .05, vertical: mq.height * .01),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            platform == "APPLE"
+                ? 'assets/logo/apple_logo.png'
+                : platform == "KAKAO"
+                    ? 'assets/logo/kakao_logo.png'
+                    : platform == "GOOGLE"
+                        ? 'assets/logo/google_logo.png'
+                        : 'assets/logo/apple_logo.png',
+            height: 24,
+          ),
+          SizedBox(width: mq.width * .07),
+          Text(
+            platform == "APPLE"
+                ? '애플 아이디로 로그인'
+                : platform == "KAKAO"
+                    ? '카카오 아이디로 로그인'
+                    : platform == "GOOGLE"
+                        ? '구글 아이디로 로그인'
+                        : '애플 아이디로 로그인',
+            style: TextStyle(
+              color: platform == "APPLE"
+                  ? Colors.white
+                  : platform == "KAKAO"
+                      ? Colors.black
+                      : platform == "GOOGLE"
+                          ? Colors.black
+                          : Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
