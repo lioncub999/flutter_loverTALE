@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showNextIcon = false;
   bool showBackIcon = false;
 
-  // 탭 안에 들어갈 내용
+  // 탭 별 화면
   List<TabData> tabs = [
     TabData(
         index: 1,

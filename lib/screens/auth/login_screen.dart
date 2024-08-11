@@ -356,12 +356,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃  커스텀 로그인 버튼    ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
   Widget _customLoginButton(String platform) {
     return ElevatedButton(
       onPressed: () async {
         await _handleLoginBtnClick(platform);
       },
       style: ElevatedButton.styleFrom(
+        // BackgroundColor
         backgroundColor: platform == "APPLE"
             ? const Color.fromRGBO(0, 0, 0, 1.0)
             : platform == "KAKAO"
@@ -377,6 +381,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // 로고 이미지
           Image.asset(
             platform == "APPLE"
                 ? 'assets/logo/apple_logo.png'
@@ -388,6 +393,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             height: 24,
           ),
           SizedBox(width: mq.width * .07),
+          // 텍스트
           Text(
             platform == "APPLE"
                 ? '애플 아이디로 로그인'
@@ -396,6 +402,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     : platform == "GOOGLE"
                         ? '구글 아이디로 로그인'
                         : '애플 아이디로 로그인',
+            // 텍스트 스타일
             style: TextStyle(
               color: platform == "APPLE"
                   ? Colors.white
