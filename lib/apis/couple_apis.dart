@@ -95,11 +95,13 @@ class CoupleAPIs {
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   /*
   * TODO :
-  *  REQ 의 member 리스트에 있는 두명의 유저 컬렉션에 couple_id 값을 요청 아이디로 업데이트 <- 커플 아이디와 값 같음
+  *  1. REQ 의 member 리스트에 있는 두명의 유저 컬렉션에 couple_id 값을 요청 아이디로 업데이트 <- 커플 아이디와 값 같음
+  *  2. 'CL_COUPLE' 컬렉션에 커플 아이디로 문서 생성 후 cre_dtm, love_start_day 세팅
   * */
   static Future<void> confirmCouple(CoupleReq req) async {
     await APIs.fireStore.collection('CL_USER').doc(req.member[0]).update({'couple_id': req.id});
     await APIs.fireStore.collection('CL_USER').doc(req.member[1]).update({'couple_id': req.id});
+    await APIs.fireStore.collection('CL_COUPLE').doc(req.id).set({'cre_dtm' : DateTime.now().millisecondsSinceEpoch});
   }
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
