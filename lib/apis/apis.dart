@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
@@ -42,18 +41,18 @@ class APIs {
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   FireBase Notification (푸시알림) - fMessaging                     ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
+  // static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   FireBase Messaging Token (메세지 푸시 토큰 -> me.pushToken)       ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  static Future<void> getFirebaseMessagingToken() async {
-    await fMessaging.requestPermission();
-    // 푸시토큰
-    // await fMessaging.getToken().then((t) {
-    //   if (t != null) {
-    //     me.pushToken = t;
-    //   }
-    // });
-  }
+  // static Future<void> getFirebaseMessagingToken() async {
+  //   await fMessaging.requestPermission();
+  //   // 푸시토큰
+  //   // await fMessaging.getToken().then((t) {
+  //   //   if (t != null) {
+  //   //     me.pushToken = t;
+  //   //   }
+  //   // });
+  // }
 }
