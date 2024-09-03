@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../apis/apis.dart';
 import '../../main.dart';
@@ -37,18 +39,22 @@ class _MainScreenState extends State<MainScreen> {
               // 좌측 공백
               SizedBox(
                 width: mq.width * .05,
-                height: mq.width * .45,
+                height: mq.height * .2,
               ),
               // 메인 사진
               SizedBox(
                 width: mq.width * .45,
-                height: mq.width * .45,
-                child: Image.asset("assets/common/main/main_default.png"),
+                height: mq.height * .2,
+                child: SizedBox(
+                  width: mq.width * .45,
+                  height: mq.width * .45,
+                  child: Image.asset("assets/common/main/main_default.png"),
+                ),
               ),
               // 우리가 연결된지
               SizedBox(
                 width: mq.width * .45,
-                height: mq.width * .45,
+                height: mq.height * .2,
                 child:
                     // 커플이 연결 돼있으면 커플화면
                     APIs.me.coupleId.isNotEmpty
@@ -75,21 +81,15 @@ class _MainScreenState extends State<MainScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text("+ 188",
-                                        style: TextStyle(
-                                            fontSize: mq.width * .1,
-                                            color: const Color.fromRGBO(109, 109, 109, 1))),
-                                    Text(" 일",
-                                        style: TextStyle(
-                                            fontSize: mq.width * .04,
-                                            color: const Color.fromRGBO(109, 109, 109, 1)))
+                                    Text("+ 188", style: TextStyle(fontSize: mq.width * .1, fontWeight: FontWeight.w900,  color: const Color.fromRGBO(255, 122, 122, 1))),
+                                    Text(" 일", style: TextStyle(fontSize: mq.width * .04, color: const Color.fromRGBO(109, 109, 109, 1)))
                                   ],
                                 ),
                               ),
                               // 우리가 연결된지 - 가까운 기념일
                               SizedBox(
                                 width: mq.width * .45,
-                                height: mq.width * .25,
+                                height: mq.width * .23,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -103,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
                                     Padding(
                                       padding: EdgeInsets.only(top: mq.width * .02),
                                       child: SizedBox(
-                                        height: mq.width * .18,
+                                        height: mq.width * .13,
                                         child: Stack(
                                           children: [
                                             ListView(
@@ -149,8 +149,7 @@ class _MainScreenState extends State<MainScreen> {
                                               right: 0,
                                               child: IgnorePointer(
                                                 child: Container(
-                                                  height:
-                                                      mq.width * .1, // Adjust the height as needed
+                                                  height: mq.width * .1, // Adjust the height as needed
                                                   decoration: const BoxDecoration(
                                                     gradient: LinearGradient(
                                                       begin: Alignment.topCenter,
@@ -184,6 +183,7 @@ class _MainScreenState extends State<MainScreen> {
               // 우측 공백
               SizedBox(
                 width: mq.width * .05,
+                height: mq.height * .2,
               )
             ],
           ),
@@ -216,6 +216,103 @@ class _MainScreenState extends State<MainScreen> {
                 height: mq.width * .4,
                 child: Image.asset('assets/common/main/spring_trip.png'),
               ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: mq.width,
+          height: mq.height * .35,
+          child: ImageSlideshow(
+
+            // 초기 페이지
+            initialPage: 0,
+
+            // 선택 된 인디케이터 색상
+            indicatorColor: const Color.fromRGBO(109, 109, 109, 1.0),
+
+            // 선택 안된 인디케이터 색상
+            indicatorBackgroundColor: const Color.fromRGBO(188, 188, 188, 1.0),
+            indicatorPadding: mq.width * .02,
+
+            // 화면 변경됐을때 실행 함수 (value = 현재 index)
+            // onPageChanged: (value) {
+            // },
+
+            // 오토 플레이. 시간
+            // autoPlayInterval: 3000,
+
+            // 끝까지 갔을때 루프 시킬건지
+            isLoop: true,
+
+            // 캐러샐 안에 들어갈 컨텐츠
+            children: [
+              Stack(
+                children: [
+                  Positioned(
+                      child: Center(
+                    child: SvgPicture.asset('assets/common/main/main_diary.svg'),
+                  )),
+                  Positioned(
+                      width: mq.width * .7,
+                      height: mq.height * .07,
+                      top: mq.height * .18,
+                      left: mq.width * .15,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "다이어리 쓰러 가기",
+                              style: TextStyle(color: Colors.white, fontSize: 24),
+                            ),
+                            Icon(Icons.pin_end),
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+              Stack(
+                children: [
+                  Positioned(
+                      child: Center(
+                        child: SvgPicture.asset('assets/common/main/main_map.svg'),
+                      )),
+                  Positioned(
+                      width: mq.width * .5,
+                      height: mq.height * .07,
+                      top: mq.height * .18,
+                      left: mq.width * .25,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "지도 보기",
+                              style: TextStyle(color: Colors.white, fontSize: 24),
+                            ),
+                            Icon(Icons.pin),
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+              const Center(
+                child: Text("세번째 화면"),
+              )
             ],
           ),
         )

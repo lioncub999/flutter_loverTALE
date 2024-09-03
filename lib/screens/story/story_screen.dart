@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../main.dart';
+
 class StoryScreen extends StatefulWidget {
   const StoryScreen({super.key});
 
@@ -10,8 +12,10 @@ class StoryScreen extends StatefulWidget {
 class _StoryScreenState extends State<StoryScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("스토리 스크린"),
+    print(mq.height);
+    return Container(
+      height: mq.height,
+      color: Colors.blue,
     );
   }
 }

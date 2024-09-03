@@ -54,6 +54,9 @@ dependencies:
   # 앱 아이콘
   flutter_launcher_icons: ^0.13.1
 
+  # 캐러셀
+  flutter_image_slideshow: any
+
 # COMMAND :  "flutter pub run flutter_launcher_icons:main"
 flutter_launcher_icons:
   android: "launcher_icon"
