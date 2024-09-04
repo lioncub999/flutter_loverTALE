@@ -57,6 +57,7 @@ dependencies:
 
   # 캐러셀
   flutter_image_slideshow: any
+  card_swiper: ^3.0.1
 
   # 캘린더
   flutter_neat_and_clean_calendar: ^0.4.13

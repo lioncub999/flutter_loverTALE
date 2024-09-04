@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_lover_tale/screens/initial/couple/couple_request_screen.dart';
@@ -22,6 +23,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  int buttonState = 0;
+
   @override
   Widget build(BuildContext context) {
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -225,127 +228,66 @@ class _MainScreenState extends State<MainScreen> {
         // ┃  하단 캐러셀  ┃
         // ┗━━━━━━━━━━━━━━━┛
         SizedBox(
-          width: mq.width,
-          height: mq.height * .35,
-          child: ImageSlideshow(
-            // 초기 페이지
-            initialPage: 0,
-
-            // 선택 된 인디케이터 색상
-            indicatorColor: greyColor,
-
-            // 선택 안된 인디케이터 색상
-            indicatorBackgroundColor: unselectGreyColor,
-            indicatorPadding: mq.width * .02,
-
-            // 화면 변경됐을때 실행 함수 (value = 현재 index)
-            // onPageChanged: (value) {
-            // },
-
-            // 오토 플레이. 시간
-            // autoPlayInterval: 3000,
-
-            // 끝까지 갔을때 루프 시킬건지
-            isLoop: true,
-
-            // 캐러샐 안에 들어갈 컨텐츠
-            children: [
-              Stack(
-                children: [
-                  Positioned(
-                      child: Center(
-                    child: SvgPicture.asset(
-                      '$commonPath/main/main_diary.svg',
-                      width: mq.width * .6,
-                    ),
-                  )),
-                  Positioned(
-                      width: mq.width * .7,
-                      height: mq.height * .07,
-                      top: mq.height * .22,
-                      left: mq.width * .15,
-                      child: APIs.me.coupleId.isNotEmpty
-                          ? ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    "다이어리 쓰러 가기",
-                                    style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
-                                  ),
-                                  Icon(Icons.pin_end),
-                                ],
-                              ),
-                            )
-                          : ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const SignCoupleScreen()));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    "커플 등록 하기",
-                                    style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
-                                  ),
-                                  Icon(Icons.pin_end),
-                                ],
-                              ),
-                            ))
-                ],
-              ),
-              Stack(
-                children: [
-                  Positioned(
-                      child: Center(
-                    child: SvgPicture.asset(
-                      '$commonPath/main/main_map.svg',
-                      width: mq.width * .6,
-                    ),
-                  )),
-                  Positioned(
-                      width: mq.width * .5,
-                      height: mq.height * .07,
-                      top: mq.height * .22,
-                      left: mq.width * .25,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              "지도 보기",
-                              style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
+            width: mq.width,
+            height: mq.height * .3,
+            child: Swiper(
+              pagination: SwiperPagination(
+                  margin: EdgeInsets.zero,
+                  builder: SwiperCustomPagination(builder: (context, config) {
+                    return ConstrainedBox(
+                      constraints: const BoxConstraints.expand(height: 50.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: DotSwiperPaginationBuilder(
+                                  color: unselectGreyColor,
+                                  activeColor: greyColor,
+                                  size: 8.0,
+                                  activeSize: 8.0)
+                                  .build(context, config),
                             ),
-                            const Icon(Icons.pin),
-                          ],
-                        ),
-                      ))
-                ],
+                          )
+                        ],
+                      ),
+                    );
+                  })),
+
+              itemBuilder: (context, index) {
+                return Container(
+                  child: [SvgPicture.asset('$commonPath/main/main_diary.svg'), SvgPicture.asset('$commonPath/main/main_map.svg')][index],
+                );
+              },
+              onIndexChanged: (value) => {
+                setState(() {
+                  buttonState = value;
+                })
+              },
+              itemCount: 2,
+              loop: false,
+              viewportFraction: .5,
+              scale: .4,
+              containerWidth: mq.width,
+              fade: .1,
+            )),
+        SizedBox(
+          width: mq.width,
+          height: mq.height * .08,
+          child: Center(
+            child: ElevatedButton(
+              onPressed: (){},
+              style: ElevatedButton.styleFrom(
+                fixedSize: Size(mq.width * .8, mq.height * .05),
+                backgroundColor: Colors.orange,
               ),
-              const Center(
-                child: Text("세번째 화면"),
-              )
-            ],
+              child:
+              buttonState == 0 ?
+              Text("다이어리 쓰러 가기", style: TextStyle(color: whiteColor))
+              :
+              Text("지도 보기", style: TextStyle(color: whiteColor))
+              ,
+            ),
           ),
         )
       ]),
