@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text("+ 188", style: TextStyle(fontSize: mq.width * .1, fontWeight: FontWeight.w900,  color: const Color.fromRGBO(255, 122, 122, 1))),
+                                    Text("+ 188", style: TextStyle(fontSize: mq.width * .1, fontWeight: FontWeight.w900, color: const Color.fromRGBO(255, 122, 122, 1))),
                                     Text(" 일", style: TextStyle(fontSize: mq.width * .04, color: const Color.fromRGBO(109, 109, 109, 1)))
                                   ],
                                 ),
@@ -223,7 +223,6 @@ class _MainScreenState extends State<MainScreen> {
           width: mq.width,
           height: mq.height * .35,
           child: ImageSlideshow(
-
             // 초기 페이지
             initialPage: 0,
 
@@ -250,12 +249,15 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Positioned(
                       child: Center(
-                    child: SvgPicture.asset('assets/common/main/main_diary.svg'),
+                    child: SvgPicture.asset(
+                      'assets/common/main/main_diary.svg',
+                      width: mq.width * .6,
+                    ),
                   )),
                   Positioned(
                       width: mq.width * .7,
                       height: mq.height * .07,
-                      top: mq.height * .18,
+                      top: mq.height * .22,
                       left: mq.width * .15,
                       child: ElevatedButton(
                         onPressed: () {},
@@ -282,12 +284,15 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Positioned(
                       child: Center(
-                        child: SvgPicture.asset('assets/common/main/main_map.svg'),
-                      )),
+                    child: SvgPicture.asset(
+                      'assets/common/main/main_map.svg',
+                      width: mq.width * .6,
+                    ),
+                  )),
                   Positioned(
                       width: mq.width * .5,
                       height: mq.height * .07,
-                      top: mq.height * .18,
+                      top: mq.height * .22,
                       left: mq.width * .25,
                       child: ElevatedButton(
                         onPressed: () {},

@@ -15,6 +15,7 @@ dependencies:
   #fluuter 현지화
   flutter_localizations:
     sdk: flutter
+  intl: any
 
   cupertino_icons: ^1.0.6
 
@@ -56,6 +57,9 @@ dependencies:
 
   # 캐러셀
   flutter_image_slideshow: any
+
+  # 캘린더
+  flutter_neat_and_clean_calendar: ^0.4.13
 
 # COMMAND :  "flutter pub run flutter_launcher_icons:main"
 flutter_launcher_icons:

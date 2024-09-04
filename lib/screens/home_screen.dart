@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       title: const Tab(
         child: Text('  이야기  '),
       ),
-      content: const StoryScreen(),
+      content: StoryScreen(),
     ),
     TabData(
       index: 2,
