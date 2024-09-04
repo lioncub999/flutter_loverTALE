@@ -270,6 +270,7 @@ class _MainScreenState extends State<MainScreen> {
               scale: .4,
               containerWidth: mq.width,
               fade: .1,
+
             )),
         SizedBox(
           width: mq.width,
