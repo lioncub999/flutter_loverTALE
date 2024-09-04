@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:flutter_lover_tale/screens/initial/couple/couple_request_screen.dart';
+import 'package:flutter_lover_tale/screens/initial/couple/sign_couple_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../apis/apis.dart';
@@ -42,11 +44,18 @@ class _MainScreenState extends State<MainScreen> {
                 SizedBox(
                   width: mq.width * .45,
                   height: mq.height * .2,
-                  child: SizedBox(
-                    width: mq.width * .45,
-                    height: mq.width * .45,
-                    child: Image.asset("$commonPath/main/main_default.png"),
-                  ),
+                  child: APIs.me.coupleId.isNotEmpty
+                      ? SizedBox(
+                          width: mq.width * .45,
+                          height: mq.width * .45,
+                          // 커플 대표 사진 가져오기
+                          child: Image.asset("$commonPath/main/main_default.png"),
+                        )
+                      : Container(
+                          width: mq.width * .45,
+                          height: mq.width * .45,
+                          decoration: BoxDecoration(color: unselectGreyColor, borderRadius: BorderRadius.circular(15)),
+                        ),
                 ),
                 // 우리가 연결된지
                 SizedBox(
@@ -255,25 +264,47 @@ class _MainScreenState extends State<MainScreen> {
                       height: mq.height * .07,
                       top: mq.height * .22,
                       left: mq.width * .15,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              "다이어리 쓰러 가기",
-                              style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
-                            ),
-                            Icon(Icons.pin_end),
-                          ],
-                        ),
-                      ))
+                      child: APIs.me.coupleId.isNotEmpty
+                          ? ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "다이어리 쓰러 가기",
+                                    style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
+                                  ),
+                                  Icon(Icons.pin_end),
+                                ],
+                              ),
+                            )
+                          : ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const SignCoupleScreen()));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "커플 등록 하기",
+                                    style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
+                                  ),
+                                  Icon(Icons.pin_end),
+                                ],
+                              ),
+                            ))
                 ],
               ),
               Stack(

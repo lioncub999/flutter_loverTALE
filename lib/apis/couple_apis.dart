@@ -59,8 +59,9 @@ class CoupleAPIs {
   *   3. 내 아이디, 파트너 아이디로 조함한 getCoupleReqId로 요청 아이디 생성
   *   4. 'CL_COUPLE_REQ' 컬렉션에 데이터 넣기
   * */
-  static Future<void> sendCoupleRequest(ModuUser partner) async {
+  static Future<void> sendCoupleRequest(ModuUser partner, DateTime loveStartDay) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
+    final convertLoveStartDay = loveStartDay.millisecondsSinceEpoch.toString();
 
     var userInfoSnapshot = await UserAPIs.getUserInfoFromUserCode(partner);
 
@@ -80,7 +81,7 @@ class CoupleAPIs {
       String coupleReqId = 'DC_${getCoupleReqId(userData.id)}';
 
       CoupleReq coupleReq =
-          CoupleReq(id: coupleReqId, fromId: APIs.user.uid, creDtm: time, member: member);
+          CoupleReq(id: coupleReqId, fromId: APIs.user.uid, loveStartDay: convertLoveStartDay,creDtm: time, member: member);
       try {
         final ref = APIs.fireStore.collection('CL_COUPLE_REQ');
         await ref.doc(coupleReqId).set(coupleReq.toJson());

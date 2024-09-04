@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/screens/histmap/hist_map_screen.dart';
@@ -30,11 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-
   // Tap 관리 State
   bool isScrollable = false;
   bool showNextIcon = false;
   bool showBackIcon = false;
+
+  // 커플 미등록시 첫 화면 닫기
+  bool coupleNextTime = true;
+
+  setCoupleNextTime() {
+    setState(() {
+      coupleNextTime = false;
+    });
+  }
 
   // 탭 별 화면
   List<TabData> tabs = [
@@ -120,10 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () async {
                           // 비동기 작업 2: Firebase 로그아웃 임시
                           await APIs.auth.signOut();
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (_) => const LoginScreen()),
-                              (route) => false);
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
                         },
                         icon: const Icon(Icons.more_horiz))
                   ],

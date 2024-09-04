@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lover_tale/screens/mypage/couple/sign_couple_screen.dart';
+
+import '../initial/couple/sign_couple_screen.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});

@@ -1,15 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/apis/couple_apis.dart';
-import 'package:flutter_lover_tale/apis/user_apis.dart';
 import 'package:flutter_lover_tale/helper/custom_dialogs.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
-import 'package:flutter_lover_tale/screens/mypage/couple/couple_request_screen.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../apis/apis.dart';
 import '../../../main.dart';
 import '../../../models/couple_request_model.dart';
-import '../../auth/login_screen.dart';
+import 'couple_request_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                            ┃
@@ -35,6 +35,9 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
   // 채팅창 TextField 컨트롤러
   final _textController = TextEditingController();
 
+  late bool _isDateSelected = false;
+  DateTime _selectedDate = DateTime.now();
+
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   포커스 노드 제거   ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━┛
@@ -43,6 +46,29 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
     _textController.dispose();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   ios 날짜 선택 UI   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━┛
+  void _showCupertinoDatePicker(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext builder) {
+          return SizedBox(
+            height: MediaQuery.of(context).copyWith().size.height / 3,
+            child: CupertinoDatePicker(
+              initialDateTime: _selectedDate,
+              mode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (DateTime newDate) {
+                setState(() {
+                  _selectedDate = newDate;
+                  _isDateSelected = true;
+                });
+              },
+            ),
+          );
+        });
   }
 
   @override
@@ -175,6 +201,34 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                     ),
                   ),
                 ),
+                GestureDetector(
+                  onTap: () => _showCupertinoDatePicker(context),
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _isDateSelected
+                              ? Text(
+                            '${_selectedDate.year}년 ${_selectedDate.month}월 ${_selectedDate.day}일',
+                            style: const TextStyle(
+                                fontSize: 16.0, color: Color.fromRGBO(109, 109, 109, 1)),
+                          )
+                              : const Text(
+                            '우리가 만난날',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color.fromRGBO(109, 109, 109, 1),
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          SvgPicture.asset('assets/common/arrowBottom.svg')
+                        ],
+                      )),
+                ),
                 ElevatedButton(
                     onPressed: () async {
                       ModuUser partner = ModuUser(
@@ -193,7 +247,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                         CustomDialogs.showSnackbar(context, "나에게 보낼 수는 없어요~.~.");
                       } else {
                         if (await CoupleAPIs.checkUserCouple(partner)) {
-                          await CoupleAPIs.sendCoupleRequest(partner);
+                          CoupleAPIs.sendCoupleRequest(partner, _selectedDate);
                           CustomDialogs.showSnackbar(context, "요청이 전송 되었습니다.");
                         } else {
                           CustomDialogs.showSnackbar(context, "코드를 확인 해주세요");

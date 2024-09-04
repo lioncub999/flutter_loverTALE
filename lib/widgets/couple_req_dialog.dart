@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/apis/couple_apis.dart';
+import 'package:flutter_lover_tale/helper/custom_date_util.dart';
 import 'package:flutter_lover_tale/models/couple_request_model.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
 
@@ -29,14 +30,7 @@ class CoupleReqDialog extends StatelessWidget {
               alignment: Alignment.center,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(mq.width * .25),
-                child: CachedNetworkImage(
-                  width: mq.width * .5,
-                  height: mq.width * .5,
-                  fit: BoxFit.cover,
-                  imageUrl: user.image,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+                child: Text('연애 시작일 '+CustomDateUtil.getOrgTime(context: context, date: req.loveStartDay, returnType: 'korYMD')),
               ),
             ),
             Positioned(
