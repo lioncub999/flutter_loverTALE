@@ -12,8 +12,16 @@ import 'firebase_options.dart';
 // ┃                             앱 실행 메인 화면                              ┃
 // ┃                                                                            ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
 // 전영역 크기 관리 mq (Media Query) 초기화
 late Size mq;
+// 색상
+late Color whiteColor;
+late Color greyColor;
+late Color unselectGreyColor;
+
+// asset path
+late String commonPath;
 
 // Initialize-Firebase (firebase 초기화)
 _initializeFirebase() async {
@@ -23,12 +31,14 @@ _initializeFirebase() async {
 }
 
 void main() async {
+  // 카카오 로그인 네이티브 앱키
+  String kakaoNativeAppKey = 'cb3fa92e586e1bf7092997e5a9a9d5be';
+  KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
+
   // WidgetFlutterBinding 인스턴스 초기화
   WidgetsFlutterBinding.ensureInitialized();
   // firebase 초기화
   await _initializeFirebase();
-  // 카카오 로그인 네이티브 앱키
-  KakaoSdk.init(nativeAppKey: 'cb3fa92e586e1bf7092997e5a9a9d5be');
 
   runApp(MultiProvider(
     providers: [
@@ -52,7 +62,7 @@ void main() async {
       // ┃   전체 공통 Theme   ┃
       // ┗━━━━━━━━━━━━━━━━━━━━━┛
       theme: ThemeData(
-          // Ripple Effect 비활성화
+          // GOOGLE Ripple Effect 비 활성화
           splashFactory: NoSplash.splashFactory,
           // 앱바 공통 Theme
           appBarTheme: const AppBarTheme(
@@ -61,21 +71,11 @@ void main() async {
               titleTextStyle: TextStyle(
                 color: Color.fromRGBO(109, 109, 109, 1),
                 fontWeight: FontWeight.w700,
-                fontSize: 19,
+                fontSize: 20,
               ),
               iconTheme: IconThemeData(color: Color.fromRGBO(109, 109, 109, 1))),
           // 공통 폰트
-          fontFamily: 'Pretendard',
-          // 하단바 공통 Theme
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Color.fromRGBO(92, 97, 103, 1),
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white,
-            // 선택 요소 라벨 보이기
-            showSelectedLabels: true,
-            // 미선택 요소 라벨 가리기
-            showUnselectedLabels: false,
-          )),
+          fontFamily: 'Pretendard'),
       home: const MyApp(),
     ),
   ));
@@ -89,15 +89,7 @@ class MyApp extends StatefulWidget {
 }
 
 // 전역 State <MainStore>
-class MainStore extends ChangeNotifier {
-  // 하단 Navbar State
-  int bottomTapState = 0;
-
-  setTapState(tap) {
-    bottomTapState = tap;
-    notifyListeners();
-  }
-}
+class MainStore extends ChangeNotifier {}
 
 class _MyAppState extends State<MyApp> {
   // ┏━━━━━━━━━━━━━━━┓
@@ -115,8 +107,12 @@ class _MyAppState extends State<MyApp> {
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   @override
   Widget build(BuildContext context) {
-    // 전영역 크기 관리 mq
+    // 전역 공통 변수 관리
     mq = MediaQuery.of(context).size;
+    whiteColor = const Color.fromRGBO(245, 245, 245, 1);
+    greyColor = const Color.fromRGBO(109, 109, 109, 1);
+    unselectGreyColor = const Color.fromRGBO(197, 197, 197, 1);
+    commonPath = 'assets/common/';
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     // ┃   앱 실행시 스플레시 스크린으로 이동   ┃
     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛

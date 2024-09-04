@@ -34,163 +34,156 @@ class _MainScreenState extends State<MainScreen> {
           // ┏━━━━━━━━━━━━━━━┓
           // ┃  상단 콘텐츠  ┃
           // ┗━━━━━━━━━━━━━━━┛
-          child: Row(
-            children: [
-              // 좌측 공백
-              SizedBox(
-                width: mq.width * .05,
-                height: mq.height * .2,
-              ),
-              // 메인 사진
-              SizedBox(
-                width: mq.width * .45,
-                height: mq.height * .2,
-                child: SizedBox(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+            child: Row(
+              children: [
+                // 메인 사진
+                SizedBox(
                   width: mq.width * .45,
-                  height: mq.width * .45,
-                  child: Image.asset("assets/common/main/main_default.png"),
+                  height: mq.height * .2,
+                  child: SizedBox(
+                    width: mq.width * .45,
+                    height: mq.width * .45,
+                    child: Image.asset("$commonPath/main/main_default.png"),
+                  ),
                 ),
-              ),
-              // 우리가 연결된지
-              SizedBox(
-                width: mq.width * .45,
-                height: mq.height * .2,
-                child:
-                    // 커플이 연결 돼있으면 커플화면
-                    APIs.me.coupleId.isNotEmpty
-                        ? Column(
-                            children: [
-                              SizedBox(
-                                width: mq.width * .45,
-                                height: mq.width * .08,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 30,
-                                      child: Image.asset('assets/common/main/main_heart.png'),
-                                    ),
-                                    const Text("우리가 연결된 지")
-                                  ],
-                                ),
-                              ),
-                              // 우리가 연결된지 - D-day
-                              SizedBox(
-                                width: mq.width * .45,
-                                height: mq.width * .12,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("+ 188", style: TextStyle(fontSize: mq.width * .1, fontWeight: FontWeight.w900, color: const Color.fromRGBO(255, 122, 122, 1))),
-                                    Text(" 일", style: TextStyle(fontSize: mq.width * .04, color: const Color.fromRGBO(109, 109, 109, 1)))
-                                  ],
-                                ),
-                              ),
-                              // 우리가 연결된지 - 가까운 기념일
-                              SizedBox(
-                                width: mq.width * .45,
-                                height: mq.width * .23,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: mq.width * .04,
-                                      child: Text(
-                                        "   가까운 기념일",
-                                        style: TextStyle(fontSize: mq.width * .03),
+                // 우리가 연결된지
+                SizedBox(
+                  width: mq.width * .45,
+                  height: mq.height * .2,
+                  child:
+                      // 커플이 연결 돼있으면 커플화면
+                      APIs.me.coupleId.isNotEmpty
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                  width: mq.width * .45,
+                                  height: mq.height * .02,
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: mq.width * .05,
+                                        child: Image.asset('$commonPath/main/main_heart.png'),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: mq.width * .02),
-                                      child: SizedBox(
-                                        height: mq.width * .13,
-                                        child: Stack(
-                                          children: [
-                                            ListView(
-                                              children: const [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [Text("+200일"), Text("2024.09.11")],
-                                                ),
-                                              ],
-                                            ),
-                                            // 하단 더보기 블러 처리
-                                            Positioned(
-                                              bottom: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: IgnorePointer(
-                                                child: Container(
-                                                  height: mq.width * .1, // Adjust the height as needed
-                                                  decoration: const BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment.topCenter,
-                                                      end: Alignment.bottomCenter,
-                                                      colors: [
-                                                        Color.fromRGBO(245, 245, 245, 0),
-                                                        Color.fromRGBO(245, 245, 245, 0.5),
-                                                        Color.fromRGBO(245, 245, 245, 0.7),
-                                                        Color.fromRGBO(245, 245, 245, 0.9),
-                                                      ],
+                                      const Text("우리가 연결된 지")
+                                    ],
+                                  ),
+                                ),
+                                // 우리가 연결된지 - D-day
+                                SizedBox(
+                                  width: mq.width * .45,
+                                  height: mq.height * .06,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text("+ 188", style: TextStyle(fontSize: mq.width * .1, fontWeight: FontWeight.w900, color: const Color.fromRGBO(255, 122, 122, 1))),
+                                      Text(" 일", style: TextStyle(fontSize: mq.width * .04, color: greyColor))
+                                    ],
+                                  ),
+                                ),
+                                // 우리가 연결된지 - 가까운 기념일
+                                SizedBox(
+                                  width: mq.width * .45,
+                                  height: mq.height * .11,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: mq.height * .02,
+                                        child: Text(
+                                          "   가까운 기념일",
+                                          style: TextStyle(fontSize: mq.width * .03),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: mq.width * .02),
+                                        child: SizedBox(
+                                          height: mq.height * .08,
+                                          child: Stack(
+                                            children: [
+                                              ListView(
+                                                children: const [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [Text("+200일"), Text("2024.09.11")],
+                                                  ),
+                                                ],
+                                              ),
+                                              // 하단 더보기 블러 처리
+                                              Positioned(
+                                                bottom: 0,
+                                                left: 0,
+                                                right: 0,
+                                                child: IgnorePointer(
+                                                  child: Container(
+                                                    height: mq.height * .05, // Adjust the height as needed
+                                                    decoration: const BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        begin: Alignment.topCenter,
+                                                        end: Alignment.bottomCenter,
+                                                        colors: [
+                                                          Color.fromRGBO(245, 245, 245, 0),
+                                                          Color.fromRGBO(245, 245, 245, 0.5),
+                                                          Color.fromRGBO(245, 245, 245, 0.7),
+                                                          Color.fromRGBO(245, 245, 245, 0.9),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          )
-                        :
-                        // 커플 미등록 시 문구
-                        const Center(
-                            child: Text("커플 연결이 필요해요"),
-                          ),
-              ),
-              // 우측 공백
-              SizedBox(
-                width: mq.width * .05,
-                height: mq.height * .2,
-              )
-            ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          :
+                          // 커플 미등록 시 문구
+                          const Center(
+                              child: Text("커플 연결이 필요해요"),
+                            ),
+                ),
+              ],
+            ),
           ),
         ),
-        // ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
-        // ┃  가운데 사진첩 콘텐츠  ┃
-        // ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
+        // ┏━━━━━━━━━━━━━━━━━━━━━━┓
+        // ┃  중앙 사진첩 콘텐츠  ┃
+        // ┗━━━━━━━━━━━━━━━━━━━━━━┛
         SizedBox(
           width: mq.width,
           height: mq.height * .2,
@@ -204,21 +197,24 @@ class _MainScreenState extends State<MainScreen> {
               SizedBox(
                 width: mq.width * .4,
                 height: mq.width * .4,
-                child: Image.asset('assets/common/main/spring_trip.png'),
+                child: Image.asset('$commonPath/main/spring_trip.png'),
               ),
               SizedBox(
                 width: mq.width * .4,
                 height: mq.width * .4,
-                child: Image.asset('assets/common/main/summer_trip.png'),
+                child: Image.asset('$commonPath/main/summer_trip.png'),
               ),
               SizedBox(
                 width: mq.width * .4,
                 height: mq.width * .4,
-                child: Image.asset('assets/common/main/spring_trip.png'),
+                child: Image.asset('$commonPath/main/spring_trip.png'),
               ),
             ],
           ),
         ),
+        // ┏━━━━━━━━━━━━━━━┓
+        // ┃  하단 캐러셀  ┃
+        // ┗━━━━━━━━━━━━━━━┛
         SizedBox(
           width: mq.width,
           height: mq.height * .35,
@@ -227,10 +223,10 @@ class _MainScreenState extends State<MainScreen> {
             initialPage: 0,
 
             // 선택 된 인디케이터 색상
-            indicatorColor: const Color.fromRGBO(109, 109, 109, 1.0),
+            indicatorColor: greyColor,
 
             // 선택 안된 인디케이터 색상
-            indicatorBackgroundColor: const Color.fromRGBO(188, 188, 188, 1.0),
+            indicatorBackgroundColor: unselectGreyColor,
             indicatorPadding: mq.width * .02,
 
             // 화면 변경됐을때 실행 함수 (value = 현재 index)
@@ -250,7 +246,7 @@ class _MainScreenState extends State<MainScreen> {
                   Positioned(
                       child: Center(
                     child: SvgPicture.asset(
-                      'assets/common/main/main_diary.svg',
+                      '$commonPath/main/main_diary.svg',
                       width: mq.width * .6,
                     ),
                   )),
@@ -264,15 +260,15 @@ class _MainScreenState extends State<MainScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromRGBO(242, 113, 65, 1.0),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
                               "다이어리 쓰러 가기",
-                              style: TextStyle(color: Colors.white, fontSize: 24),
+                              style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
                             ),
                             Icon(Icons.pin_end),
                           ],
@@ -285,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
                   Positioned(
                       child: Center(
                     child: SvgPicture.asset(
-                      'assets/common/main/main_map.svg',
+                      '$commonPath/main/main_map.svg',
                       width: mq.width * .6,
                     ),
                   )),
@@ -302,14 +298,14 @@ class _MainScreenState extends State<MainScreen> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
                               "지도 보기",
-                              style: TextStyle(color: Colors.white, fontSize: 24),
+                              style: TextStyle(color: Colors.white, fontSize: mq.width * .06),
                             ),
-                            Icon(Icons.pin),
+                            const Icon(Icons.pin),
                           ],
                         ),
                       ))

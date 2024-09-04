@@ -66,7 +66,7 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/logo/lover_tale_icon.png"
+  image_path: "assets/common/logo/lover_tale_icon.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
 
 dev_dependencies:
@@ -81,8 +81,8 @@ flutter:
 
   assets:
     - assets/
-    - assets/logo/
     - assets/common/
+    - assets/common/logo/
     - assets/common/main/
 
   fonts:

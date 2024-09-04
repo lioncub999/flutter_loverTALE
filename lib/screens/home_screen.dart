@@ -52,14 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
       content: StoryScreen(),
     ),
     TabData(
-      index: 2,
+      index: 3,
       title: const Tab(
         child: Text('추억지도'),
       ),
       content: const HistMapScreen(),
     ),
     TabData(
-      index: 2,
+      index: 4,
       title: const Tab(
         child: Text('  내정보  '),
       ),
@@ -105,12 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 appBar: AppBar(
                   // AppBar - Leading
                   leading: Container(
-                    padding: const EdgeInsets.all(8.0), // 필요한 만큼의 패딩을 추가
                     alignment: Alignment.center, // 로고를 가운데로 정렬
                     child: SvgPicture.asset(
-                      'assets/logo/lover_tale_logo.svg',
-                      width: 18,
-                      height: 18,
+                      '$commonPath/logo/lover_tale_logo.svg',
+                      width: mq.width * .04,
+                      height: mq.width * .04,
                     ),
                   ),
                   // AppBar - Title
@@ -133,16 +132,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ┃   Body - Tap + 화면   ┃
                 // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
                 body: Container(
-                  color: const Color.fromRGBO(245, 245, 245, 1),
+                  color: whiteColor,
                   width: mq.width,
                   child: Column(
                     children: [
                       Expanded(
                         child: DynamicTabBarWidget(
                           dividerHeight: 0,
-                          labelColor: const Color.fromRGBO(109, 109, 109, 1),
-                          unselectedLabelColor: const Color.fromRGBO(197, 197, 197, 1),
-                          indicatorColor: const Color.fromRGBO(109, 109, 109, 1),
+                          labelColor: greyColor,
+                          unselectedLabelColor: unselectGreyColor,
+                          indicatorColor: greyColor,
                           dynamicTabs: tabs,
                           isScrollable: isScrollable,
                           onTabControllerUpdated: (controller) {},

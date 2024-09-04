@@ -27,7 +27,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-  // 애니메이션 관리
+  // 애니메이션 관리 state
   bool _isAnimate = false;
 
   // D-day + 관련 TIMER
@@ -210,12 +210,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       // true : db에 데이터 있음.
       await UserAPIs.logLoginHist();
       Navigator.of(context).pushReplacement(_moveHomeRoute());
-      CustomDialogs.showSnackbar(context, '로그인 되었습니다');
     } else {
       UserAPIs.createUser().then((value) async {
         await UserAPIs.logLoginHist();
         Navigator.of(context).pushReplacement(_moveHomeRoute());
-        CustomDialogs.showSnackbar(context, '로그인 되었습니다');
       });
     }
   }
@@ -256,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(245, 245, 245, 1), // Login Screen backgroundColor
+      backgroundColor: whiteColor, // Login Screen backgroundColor
       // ┏━━━━━━━━┓
       // ┃  Body  ┃
       // ┗━━━━━━━━┛
@@ -274,19 +272,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // D-Day - Text - "D+"
-                      const Text(
+                      Text(
                         "D+",
                         style: TextStyle(
-                            color: Color.fromRGBO(209, 209, 209, .5),
-                            fontSize: 100,
+                            color: const Color.fromRGBO(209, 209, 209, .4),
+                            fontSize: mq.width * .25,
                             fontWeight: FontWeight.bold),
                       ),
                       // D-Day - Text - NUMBER
                       AnimatedFlipCounter(
                         value: _dayCount,
-                        textStyle: const TextStyle(
-                            fontSize: 100,
-                            color: Color.fromRGBO(209, 209, 209, .5),
+                        textStyle: TextStyle(
+                            fontSize: mq.width * .25,
+                            color: const Color.fromRGBO(209, 209, 209, .4),
                             fontWeight: FontWeight.bold),
                       )
                     ],
@@ -314,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             left: mq.width * .07,
             top: mq.height * .35,
             child: Image.asset(
-              'assets/common/loginTitle.png',
+              '$commonPath/loginTitle.png',
               width: mq.width * .8,
             ),
           ),
@@ -384,12 +382,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           // 로고 이미지
           Image.asset(
             platform == "APPLE"
-                ? 'assets/logo/apple_logo.png'
+                ? 'assets/common/logo/apple_logo.png'
                 : platform == "KAKAO"
-                    ? 'assets/logo/kakao_logo.png'
+                    ? 'assets/common/logo/kakao_logo.png'
                     : platform == "GOOGLE"
-                        ? 'assets/logo/google_logo.png'
-                        : 'assets/logo/apple_logo.png',
+                        ? 'assets/common/logo/google_logo.png'
+                        : 'assets/common/logo/apple_logo.png',
             height: 24,
           ),
           SizedBox(width: mq.width * .07),
@@ -411,7 +409,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       : platform == "GOOGLE"
                           ? Colors.black
                           : Colors.black,
-              fontSize: 16,
+              fontSize: mq.width * .043,
               fontWeight: FontWeight.bold,
             ),
           ),
