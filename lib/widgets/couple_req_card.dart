@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/helper/custom_date_util.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
 
-import '../models/couple_request_model.dart';
+import '../models/couple_model.dart';
 import 'couple_req_dialog.dart';
 
 class CoupleReqCard extends StatefulWidget {
   const CoupleReqCard({super.key, required this.user, required this.req});
 
   final ModuUser user;
-  final CoupleReq  req;
+  final Couple  req;
 
   @override
   State<CoupleReqCard> createState() => _CoupleReqCardState();

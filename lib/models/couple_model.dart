@@ -3,8 +3,8 @@
 // ┃                               CL_COUPLE_REQ MODEL                                ┃
 // ┃                                                                                  ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-class CoupleReq {
-  CoupleReq({
+class Couple {
+  Couple({
     required this.id,                     // 고유 아이디
     required this.fromId,                 // 요청 보낸 사람 아이디
     required this.loveStartDay,           // 연애 시작일
@@ -18,7 +18,7 @@ class CoupleReq {
   late String creDtm;
   late List<String> member;
 
-  CoupleReq.fromJson(Map<String, dynamic> json) {
+  Couple.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? '';
     fromId = json['from_id'] ?? '';
     loveStartDay = json['love_start_day'] ?? '';

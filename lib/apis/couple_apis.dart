@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_lover_tale/apis/user_apis.dart';
-import 'package:flutter_lover_tale/models/couple_request_model.dart';
+import 'package:flutter_lover_tale/models/couple_model.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -77,14 +77,15 @@ class CoupleAPIs {
         member.add(userData.id);
         member.add(APIs.user.uid);
       }
-      // req Id GEN
-      String coupleReqId = 'DC_${getCoupleReqId(userData.id)}';
+      // coupleId GEN
+      String coupleId = 'DC_${getCoupleReqId(userData.id)}';
 
-      CoupleReq coupleReq =
-          CoupleReq(id: coupleReqId, fromId: APIs.user.uid, loveStartDay: convertLoveStartDay,creDtm: time, member: member);
+      Couple couple =
+          Couple(id: coupleId, fromId: APIs.user.uid, loveStartDay: convertLoveStartDay, creDtm: time, member: member);
       try {
-        final ref = APIs.fireStore.collection('CL_COUPLE_REQ');
-        await ref.doc(coupleReqId).set(coupleReq.toJson());
+        await APIs.fireStore.collection('CL_USER').doc(couple.member[0]).update({'couple_id': couple.id});
+        await APIs.fireStore.collection('CL_USER').doc(couple.member[1]).update({'couple_id': couple.id});
+        await APIs.fireStore.collection('CL_COUPLE').doc(couple.id).set(couple.toJson());
       } catch (e) {
         rethrow;
       }
@@ -99,27 +100,9 @@ class CoupleAPIs {
   *  1. REQ 의 member 리스트에 있는 두명의 유저 컬렉션에 couple_id 값을 요청 아이디로 업데이트 <- 커플 아이디와 값 같음
   *  2. 'CL_COUPLE' 컬렉션에 커플 아이디로 문서 생성 후 cre_dtm, love_start_day 세팅
   * */
-  static Future<void> confirmCouple(CoupleReq req) async {
+  static Future<void> confirmCouple(Couple req) async {
     await APIs.fireStore.collection('CL_USER').doc(req.member[0]).update({'couple_id': req.id});
     await APIs.fireStore.collection('CL_USER').doc(req.member[1]).update({'couple_id': req.id});
     await APIs.fireStore.collection('CL_COUPLE').doc(req.id).set({'cre_dtm' : DateTime.now().millisecondsSinceEpoch});
-  }
-
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃   ● 내게 온 요청 모두 조회                                           ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  /*
-  * TODO :
-  *  1. 'CL_COUPLE_REQ' 컬렉션 에서 member list 에 내 id 들어간 doc 모두 가져오기.
-  *  2. 가져온 값 중에서 from_id (요청 보낸 사람) 가 내가 아닌 것들만 다시 가져오기.
-  * */
-  static Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getMyCoupleRequest() {
-    return APIs.fireStore
-        .collection('CL_COUPLE_REQ')
-        .where('member', arrayContains: APIs.user.uid)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.where((doc) => doc.data()['from_id'] != APIs.user.uid).toList();
-    });
   }
 }

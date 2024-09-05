@@ -4,12 +4,11 @@ import 'package:flutter_lover_tale/apis/couple_apis.dart';
 import 'package:flutter_lover_tale/helper/custom_dialogs.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
+import 'package:flutter_lover_tale/screens/initial/couple/couple_request_success_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../apis/apis.dart';
 import '../../../main.dart';
-import '../../../models/couple_request_model.dart';
-import 'couple_request_screen.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                            ┃
@@ -87,39 +86,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
         // ┃  AppBar  ┃
         // ┗━━━━━━━━━━┛
         appBar: AppBar(
-          actions: [
-            Stack(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (_) => const CoupleRequestScreen()));
-                    },
-                    icon: const Icon(Icons.mail)),
-                StreamBuilder(
-                    stream: CoupleAPIs.getMyCoupleRequest(),
-                    builder: (context, snapshot) {
-                      final data = snapshot.data;
-                      final list = data?.map((e) => CoupleReq.fromJson(e.data())).toList() ?? [];
-                      return Positioned(
-                        left: 4,
-                        top: 4,
-                        child: Container(
-                          padding: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            color: list.isNotEmpty ? Colors.red : null,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 10,
-                            minHeight: 10,
-                          ),
-                        ),
-                      );
-                    }),
-              ],
-            )
-          ],
+          actions: [],
         ),
         // ┏━━━━━━━━┓
         // ┃  Body  ┃
@@ -247,8 +214,10 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                         CustomDialogs.showSnackbar(context, "나에게 보낼 수는 없어요~.~.");
                       } else {
                         if (await CoupleAPIs.checkUserCouple(partner)) {
-                          CoupleAPIs.sendCoupleRequest(partner, _selectedDate);
+                          await CoupleAPIs.sendCoupleRequest(partner, _selectedDate);
                           CustomDialogs.showSnackbar(context, "요청이 전송 되었습니다.");
+                          await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CoupleRequestSuccessScreen()));
+                          
                         } else {
                           CustomDialogs.showSnackbar(context, "코드를 확인 해주세요");
                         }

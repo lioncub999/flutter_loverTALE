@@ -14,22 +14,6 @@ class HistMapScreen extends StatefulWidget {
 class _HistMapScreenState extends State<HistMapScreen> {
   @override
   Widget build(BuildContext context) {
-    return Swiper(
-      itemBuilder: (context, index) {
-        return Container(
-          child: SvgPicture.asset('$commonPath/main/main_diary.svg',),
-        );
-      },
-      onIndexChanged: (value) => {
-        print(value)
-      },
-      itemCount: 2,
-      loop: false,
-      viewportFraction: .5,
-      scale: .4,
-      containerWidth: mq.width,
-      fade: .1,
-
-    );
+    return Container();
   }
 }

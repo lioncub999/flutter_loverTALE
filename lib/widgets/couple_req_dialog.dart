@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lover_tale/apis/couple_apis.dart';
 import 'package:flutter_lover_tale/helper/custom_date_util.dart';
-import 'package:flutter_lover_tale/models/couple_request_model.dart';
+import 'package:flutter_lover_tale/models/couple_model.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
 
 import '../../main.dart';
@@ -13,7 +13,7 @@ class CoupleReqDialog extends StatelessWidget {
   const CoupleReqDialog({super.key, required this.user, required this.req});
 
   final ModuUser user;
-  final CoupleReq req;
+  final Couple req;
 
   @override
   Widget build(BuildContext context) {
