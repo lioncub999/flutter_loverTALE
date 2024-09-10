@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_lover_tale/screens/common/splash_screen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 
@@ -37,6 +38,8 @@ void main() async {
 
   // WidgetFlutterBinding 인스턴스 초기화
   WidgetsFlutterBinding.ensureInitialized();
+  // 광고 초기화
+  MobileAds.instance.initialize();
   // firebase 초기화
   await _initializeFirebase();
 
@@ -75,7 +78,8 @@ void main() async {
               ),
               iconTheme: IconThemeData(color: Color.fromRGBO(109, 109, 109, 1))),
           // 공통 폰트
-          fontFamily: 'Pretendard'),
+          fontFamily: 'Pretendard',
+      ),
       home: const MyApp(),
     ),
   ));

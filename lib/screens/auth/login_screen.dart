@@ -188,16 +188,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // 사용자가 로그인 창에서 취소하면 googleUser는 null이 됨
+      if (googleUser == null) {
+        // 로그인 취소 시 추가 처리(필요하면)
+        return null; // 또는 다른 적절한 처리
+      }
+
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
+
       // Once signed in, return the UserCredential
       return await APIs.auth.signInWithCredential(credential);
     } catch (e) {
+      // 오류 발생 시 처리
+      print("Error during Google sign-in: $e");
       return null;
     }
   }
@@ -274,18 +285,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       // D-Day - Text - "D+"
                       Text(
                         "D+",
-                        style: TextStyle(
-                            color: const Color.fromRGBO(209, 209, 209, .4),
-                            fontSize: mq.width * .25,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(color: const Color.fromRGBO(209, 209, 209, .4), fontSize: mq.width * .25, fontWeight: FontWeight.bold),
                       ),
                       // D-Day - Text - NUMBER
                       AnimatedFlipCounter(
                         value: _dayCount,
-                        textStyle: TextStyle(
-                            fontSize: mq.width * .25,
-                            color: const Color.fromRGBO(209, 209, 209, .4),
-                            fontWeight: FontWeight.bold),
+                        textStyle: TextStyle(fontSize: mq.width * .25, color: const Color.fromRGBO(209, 209, 209, .4), fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
@@ -322,10 +327,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           Positioned(
             top: mq.height * .7,
             left: mq.width * .05,
-            child: SizedBox(
-                width: mq.width * 0.9,
-                height: mq.height * 0.06,
-                child: _customLoginButton("APPLE")),
+            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("APPLE")),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 카카오 로그인 버튼    ┃
@@ -333,10 +335,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           Positioned(
             top: mq.height * .78,
             left: mq.width * .05,
-            child: SizedBox(
-                width: mq.width * 0.9,
-                height: mq.height * 0.06,
-                child: _customLoginButton("KAKAO")),
+            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("KAKAO")),
           ),
           // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
           // ┃  Body - 구글 로그인 버튼    ┃
@@ -344,10 +343,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           Positioned(
             top: mq.height * .86,
             left: mq.width * .05,
-            child: SizedBox(
-                width: mq.width * 0.9,
-                height: mq.height * 0.06,
-                child: _customLoginButton("GOOGLE")),
+            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("GOOGLE")),
           )
         ],
       ),
