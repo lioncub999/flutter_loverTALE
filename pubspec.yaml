@@ -89,6 +89,8 @@ flutter:
     - assets/common/logo/
     - assets/common/main/
     - assets/common/icon/
+    - assets/common/text/
+    - assets/common/character/
 
   fonts:
     - family: Pretendard

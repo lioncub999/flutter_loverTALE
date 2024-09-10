@@ -41,13 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _createBannerAd() {
     setState(() {
       _bannerAd = BannerAd(
-          size: AdSize.fullBanner,
-          adUnitId: AdMobService.bannerAdUnitId!,
-          listener: AdMobService.bannerAdListener,
-          request: const AdRequest())..load();
+          size: AdSize.fullBanner, adUnitId: AdMobService.bannerAdUnitId!, listener: AdMobService.bannerAdListener, request: const AdRequest())
+        ..load();
       _bannerIsLoaded = true;
     });
-
   }
 
   // Tap 관리 State
@@ -82,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     TabData(
       index: 3,
       title: const Tab(
-        child: Text('추억지도'),
+        child: Text('추억 지도'),
       ),
       content: const HistMapScreen(),
     ),
@@ -106,100 +103,114 @@ class _HomeScreenState extends State<HomeScreen> {
     // ┃  현재 로그인 유저 정보 확인을 위한 FutureBuilder  ┃
     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
     return FutureBuilder(
-          future: UserAPIs.getSelfInfo(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(child: CircularProgressIndicator()),
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-              // ┃  me.id 가 비어 있으면 로그인 화면으로  ┃
-              // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-              if (APIs.me.id.isEmpty) {
-                return const LoginScreen();
-              }
-              // ┏━━━━━━━━━━━━━━━━━━━━━━┓
-              // ┃  기본정보 등록 확인  ┃
-              // ┗━━━━━━━━━━━━━━━━━━━━━━┛
-              if (APIs.me.gender.isNotEmpty && APIs.me.birthDay.isNotEmpty) {
-                return Scaffold(
-                  // ┏━━━━━━━━━━━━┓
-                  // ┃   AppBar   ┃
-                  // ┗━━━━━━━━━━━━┛
-                  appBar: AppBar(
-                    // AppBar - Leading
-                    leading: Container(
-                      alignment: Alignment.center, // 로고를 가운데로 정렬
-                      child: SvgPicture.asset(
-                        '$commonPath/logo/lover_tale_logo.svg',
-                        width: mq.width * .04,
-                        height: mq.width * .04,
+        future: UserAPIs.getSelfInfo(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+            // ┃  me.id 가 비어 있으면 로그인 화면으로  ┃
+            // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+            if (APIs.me.id.isEmpty) {
+              return const LoginScreen();
+            }
+            // ┏━━━━━━━━━━━━━━━━━━━━━━┓
+            // ┃  기본정보 등록 확인  ┃
+            // ┗━━━━━━━━━━━━━━━━━━━━━━┛
+            if (APIs.me.gender.isNotEmpty && APIs.me.birthDay.isNotEmpty) {
+              return Scaffold(
+                // ┏━━━━━━━━━━━━┓
+                // ┃   AppBar   ┃
+                // ┗━━━━━━━━━━━━┛
+                appBar: AppBar(
+                  // AppBar - Title
+                  title: SvgPicture.asset(
+                    '$commonPath/logo/lover_tale_logo.svg',
+                    width: mq.width * .05,
+                    height: mq.width * .05,
+                  ),
+                  // AppBar - Action
+                  actions: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                        shadowColor: WidgetStateProperty.all(Colors.transparent),
+                        overlayColor: WidgetStateProperty.all(Colors.transparent),
+                        elevation: WidgetStateProperty.all(0),
                       ),
-                    ),
-                    // AppBar - Title
-                    title: const Text("홈"),
-                    // AppBar - Action
-                    actions: [
-                      IconButton(
-                          onPressed: () async {
-                            // 비동기 작업 2: Firebase 로그아웃 임시
-                            await APIs.auth.signOut();
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
-                          },
-                          icon: const Icon(Icons.more_horiz))
+                      onPressed: () async {
+                        // 비동기 작업 2: Firebase 로그아웃 임시
+                        await APIs.auth.signOut();
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+                      },
+                      child: SvgPicture.asset("$commonPath/icon/alert_icon.svg", width: mq.width * .035,),
+                    )
+                  ],
+                ),
+                body:
+                    // ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+                    // ┃   Body - Tap + 화면   ┃
+                    // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
+                    Container(
+                  color: whiteColor,
+                  width: mq.width,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: DynamicTabBarWidget(
+                          padding: EdgeInsets.zero,
+                          dividerHeight: 0,
+                          labelColor: greyColor,
+                          unselectedLabelColor: unselectGreyColor,
+                          indicatorColor: greyColor,
+                          dynamicTabs: tabs,
+                          isScrollable: isScrollable,
+                          onTabControllerUpdated: (controller) {},
+                          onTabChanged: (index) {},
+                          onAddTabMoveTo: MoveToTab.last,
+                          showBackIcon: showBackIcon,
+                          showNextIcon: showNextIcon,
+                        ),
+                      ),
+                      // ┏━━━━━━━━━━━━━┓
+                      // ┃  광고 영역  ┃
+                      // ┗━━━━━━━━━━━━━┛
+                      _bannerAd == null && _bannerIsLoaded
+                          ? Container()
+                          : Container(
+                              color: Colors.white,
+                              width: mq.width ,
+                              height: mq.height * .07,
+                              child: Center(
+                                child: Container(
+                                  width: mq.width * .9,
+                                  color: Colors.white,
+                                  child: AdWidget(
+                                    ad: _bannerAd!,
+                                  ),
+                                ),
+                              )
+                            ),
+                      Container(
+                        color: Colors.white,
+                        height: mq.height * .03,
+                      )
                     ],
                   ),
-                  // ┏━━━━━━━━━━━━━━━━━━━━━━━┓
-                  // ┃   Body - Tap + 화면   ┃
-                  // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
-                  body: Container(
-                    color: whiteColor,
-                    width: mq.width,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: DynamicTabBarWidget(
-                            padding: EdgeInsets.zero,
-                            dividerHeight: 0,
-                            labelColor: greyColor,
-                            unselectedLabelColor: unselectGreyColor,
-                            indicatorColor: greyColor,
-                            dynamicTabs: tabs,
-                            isScrollable: isScrollable,
-                            onTabControllerUpdated: (controller) {},
-                            onTabChanged: (index) {},
-                            onAddTabMoveTo: MoveToTab.last,
-                            showBackIcon: showBackIcon,
-                            showNextIcon: showNextIcon,
-                          ),
-                        ),
-                        _bannerAd == null && _bannerIsLoaded
-                        ? Container()
-                        : SizedBox(
-                          height: mq.height * .07,
-                          child: AdWidget(
-                            ad: _bannerAd!,
-                          ),
-                        ),
-                        Container(
-                          color: whiteColor,
-                          height: mq.height * .03,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-                // ┃  기본 정보 미 등록시 기본 정보 등록 화면 으로 이동  ┃
-                // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-                return const InfoInsertScreen();
-              }
+                ),
+              );
+            } else {
+              // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+              // ┃  기본 정보 미 등록시 기본 정보 등록 화면 으로 이동  ┃
+              // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+              return const InfoInsertScreen();
             }
-          });
+          }
+        });
   }
 }

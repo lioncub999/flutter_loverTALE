@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
     whiteColor = const Color.fromRGBO(245, 245, 245, 1);
     greyColor = const Color.fromRGBO(109, 109, 109, 1);
     unselectGreyColor = const Color.fromRGBO(197, 197, 197, 1);
-    commonPath = 'assets/common/';
+    commonPath = 'assets/common';
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     // ┃   앱 실행시 스플레시 스크린으로 이동   ┃
     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛

@@ -317,7 +317,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             left: mq.width * .07,
             top: mq.height * .35,
             child: Image.asset(
-              '$commonPath/loginTitle.png',
+              '$commonPath/text/login_title.png',
               width: mq.width * .8,
             ),
           ),
