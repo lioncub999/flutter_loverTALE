@@ -71,7 +71,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
         context: context,
         builder: (BuildContext builder) {
           return SizedBox(
-            height: MediaQuery.of(context).copyWith().size.height / 3,
+            height: MediaQuery.of(context).copyWith().size.height / 4,
             child: CupertinoDatePicker(
               initialDateTime: _selectedDate,
               mode: CupertinoDatePickerMode.date,
@@ -85,6 +85,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
           );
         });
   }
+
 
   @override
   Widget build(BuildContext context) {
