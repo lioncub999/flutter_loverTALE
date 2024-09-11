@@ -1,9 +1,7 @@
-import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lover_tale/apis/couple_apis.dart';
-import 'package:flutter_lover_tale/apis/user_apis.dart';
 import 'package:flutter_lover_tale/helper/custom_date_util.dart';
 import 'package:flutter_lover_tale/helper/custom_dialogs.dart';
 import 'package:flutter_lover_tale/models/user_model.dart';
@@ -25,11 +23,6 @@ class SignCoupleScreen extends StatefulWidget {
   State<SignCoupleScreen> createState() => _SignCoupleScreenState();
 }
 
-// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-// ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
-// ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
-// ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
-// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class _SignCoupleScreenState extends State<SignCoupleScreen> {
   // ┏━━━━━━━━━━━━━━━┓
   // ┃   initState   ┃
@@ -37,25 +30,8 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
   @override
   void initState() {
     super.initState();
-
-    _textController.addListener(() {
-      setState(() {
-        _isTextEmpty = _textController.text.isEmpty;
-      });
-    });
+    _textController.addListener(_onTextChanged);
   }
-
-  // 포커스 노드
-  final FocusNode _focusNode = FocusNode();
-
-  // 채팅창 TextField 컨트롤러
-  final _textController = TextEditingController();
-  bool _isTextEmpty = true;
-  bool _isSubmitLoading = false;
-
-  late bool _isDateSelected = false;
-  DateTime _selectedDate = DateTime.now();
-  String _stringSelectedDate = "";
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   포커스 노드 제거   ┃
@@ -66,6 +42,26 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
     _focusNode.dispose();
     super.dispose();
   }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // 포커스 노드
+  final FocusNode _focusNode = FocusNode();
+
+  // 채팅창 TextField 컨트롤러
+  final _textController = TextEditingController();
+
+  // 텍스트 필드 입력시 스테이트 업데이트
+  void _onTextChanged() {
+    setState(() {});
+  }
+
+  // 등록 클릭 시 로딩 관리
+  bool _isSubmitLoading = false;
+
+  // 만난 날 선택 관리
+  late bool _isDateSelected = false;
+  DateTime _selectedDate = DateTime.now();
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   ios 날짜 선택 UI   ┃
@@ -83,8 +79,6 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                 setState(() {
                   _selectedDate = newDate;
                   _isDateSelected = true;
-                  _stringSelectedDate =
-                      CustomDateUtil.getOrgTime(context: context, date: _selectedDate.millisecondsSinceEpoch.toString(), returnType: "onlyMiddleBar");
                 });
               },
             ),
@@ -94,6 +88,11 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+    // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
+    // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+    // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
     return Scaffold(
         backgroundColor: Colors.white,
         // ┏━━━━━━━━━━┓
@@ -102,6 +101,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           actions: [
+            // 내 코드 복사 버튼
             ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(Colors.transparent),
@@ -111,7 +111,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
               ),
               onPressed: () async {
                 Clipboard.setData(ClipboardData(text: APIs.me.userCode));
-                CustomDialogs.showCustomToast(context, '코드가 복사되었습니다.');
+                CustomDialogs.showCustomToast(context, '코드가 복사 되었습니다.');
               },
               child: Text(
                 "나의 코드 복사하기",
@@ -135,29 +135,45 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
               height: mq.height,
               child: Column(
                 children: [
+                  // ┏━━━━━━━━━━━━━━━━━━━━━┓
+                  // ┃  상단 문구, 캐릭터  ┃
+                  // ┗━━━━━━━━━━━━━━━━━━━━━┛
                   SizedBox(
                     width: mq.width,
                     height: mq.height * .2,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // 좌측 여백
                         SizedBox(
                           width: mq.width * .05,
                         ),
-                        Container(
+                        // 좌측 문구 - "시작 전 커플 등록이 필요해요!"
+                        SizedBox(
                           width: mq.width * .55,
                           child: Image.asset("$commonPath/text/couple_sign_text.png"),
                         ),
-                        Container(
+                        // 우측 캐릭터
+                        SizedBox(
                           width: mq.width * .4,
-                          child: Image.asset("$commonPath/character/girl_right.png"),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Image.asset("$commonPath/character/girl_right.png"),
+                          ),
                         )
                       ],
                     ),
                   ),
+                  // ┏━━━━━━━━┓
+                  // ┃  여백  ┃
+                  // ┗━━━━━━━━┛
                   SizedBox(
                     height: mq.height * .03,
                   ),
+                  // ┏━━━━━━━━━━━┓
+                  // ┃  내 코드  ┃
+                  // ┗━━━━━━━━━━━┛
+                  // 내 코드 - title
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -173,6 +189,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       ),
                     ],
                   ),
+                  // 내 코드 - 코드
                   SizedBox(
                     width: mq.width * .8,
                     height: mq.height * .05,
@@ -196,9 +213,16 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       ),
                     ),
                   ),
+                  // ┏━━━━━━━━┓
+                  // ┃  여백  ┃
+                  // ┗━━━━━━━━┛
                   SizedBox(
                     height: mq.height * .05,
                   ),
+                  // ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
+                  // ┃  상대방 코드 등록하기  ┃
+                  // ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
+                  // 상대방 코드 등록하기 - title
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -214,6 +238,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       ),
                     ],
                   ),
+                  // 상대방 코드 등록하기 - TextField
                   Card(
                     elevation: 0,
                     color: const Color.fromRGBO(246, 246, 246, 1),
@@ -240,7 +265,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                               ),
                             ),
                           ),
-                          _isTextEmpty
+                          _textController.text == ''
                               ? Container()
                               : SizedBox(
                                   width: mq.width * .11,
@@ -265,12 +290,19 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       ),
                     ),
                   ),
+                  // ┏━━━━━━━━┓
+                  // ┃  여백  ┃
+                  // ┗━━━━━━━━┛
                   SizedBox(
                     height: mq.height * .05,
                   ),
+                  // ┏━━━━━━━━━━━━━━━━━━┓
+                  // ┃  우리가 만난 날  ┃
+                  // ┗━━━━━━━━━━━━━━━━━━┛
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // 우리가 만난 날 - title
                       SizedBox(
                         width: mq.width * .45,
                         child: Text(
@@ -278,6 +310,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                           style: TextStyle(color: greyColor, fontSize: mq.width * .06, fontWeight: FontWeight.w700),
                         ),
                       ),
+                      // 우리가 만난 날 - 날짜 선택
                       SizedBox(
                         width: mq.width * .35,
                         height: mq.height * .05,
@@ -299,7 +332,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                     child: _isDateSelected
                                         ? Center(
                                             child: Text(
-                                              _stringSelectedDate,
+                                              CustomDateUtil.getOrgTime(context: context, date: _selectedDate.millisecondsSinceEpoch.toString(), returnType: "onlyMiddleBar"),
                                               style: TextStyle(fontSize: mq.width * .035, color: greyColor),
                                             ),
                                           )
@@ -323,10 +356,16 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       ),
                     ],
                   ),
+                  // ┏━━━━━━━━┓
+                  // ┃  여백  ┃
+                  // ┗━━━━━━━━┛
                   SizedBox(
                     height: mq.height * .13,
                   ),
-                  !_isTextEmpty && _isDateSelected
+                  // ┏━━━━━━━━━━━━━┓
+                  // ┃  등록 버튼  ┃
+                  // ┗━━━━━━━━━━━━━┛
+                  _textController.text != '' && _isDateSelected
                       ? _isSubmitLoading
                           ? SizedBox(
                               width: mq.width * .4,
@@ -404,7 +443,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                     fixedSize: Size(mq.width * .35, mq.height * .08),
-                                    backgroundColor: Color.fromRGBO(255, 135, 81, 1.0),
+                                    backgroundColor: const Color.fromRGBO(255, 135, 81, 1.0),
                                     padding: EdgeInsets.zero,
                                     shadowColor: Colors.transparent,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
