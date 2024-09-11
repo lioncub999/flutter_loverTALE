@@ -65,6 +65,9 @@ dependencies:
   # 광고
   google_mobile_ads: ^5.1.0
 
+  # 토스트
+  animated_snack_bar: ^0.4.0
+
 # COMMAND :  "flutter pub run flutter_launcher_icons:main"
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -91,6 +94,7 @@ flutter:
     - assets/common/icon/
     - assets/common/text/
     - assets/common/character/
+    - assets/common/etc/
 
   fonts:
     - family: Pretendard

@@ -1,4 +1,7 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // ┃                                                                                  ┃
@@ -7,16 +10,33 @@ import 'package:flutter/material.dart';
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 class CustomDialogs {
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃   msg 받아서 SnackBar 표시                                          ┃
+  // ┃   msg 받아서 Toast 표시                                             ┃
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  static void showSnackbar(BuildContext context, String msg) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(msg),
-        backgroundColor: Colors.blue.withOpacity(.8),
-        behavior: SnackBarBehavior.floating,
-      ));
-    });
+  static void showCustomToast(BuildContext context, String msg) {
+    AnimatedSnackBar(
+      builder: ((context) {
+        return Container(
+          width: mq.width * .5,
+          height: mq.height * .05,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(mq.width * .25),
+            color: const Color.fromRGBO(200, 226, 255, 1.0),
+          ),
+          child: Center(
+            child: Text(
+              msg,
+              style: TextStyle(color: greyColor, fontSize: mq.width * .04),
+            ),
+          ),
+        );
+      }),
+      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+      duration: Duration(seconds: 1),
+      mobilePositionSettings: MobilePositionSettings(
+        bottomOnAppearance: mq.height * .21,
+        bottomOnDissapear: mq.height * .18,
+      ),
+    ).show(context);
   }
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
