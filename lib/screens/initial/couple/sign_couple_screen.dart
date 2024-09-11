@@ -181,12 +181,16 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                         borderRadius: BorderRadius.circular(10),
                         color: const Color.fromRGBO(246, 246, 246, 1),
                       ),
-                      child: Center(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Text(
-                            APIs.me.userCode,
-                            style: TextStyle(fontSize: mq.width * .035, letterSpacing: -0.24, color: greyColor),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: mq.width * .06),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              APIs.me.userCode,
+                              style: TextStyle(fontSize: mq.width * .035, letterSpacing: -0.24, color: greyColor),
+                            ),
                           ),
                         ),
                       ),
@@ -232,10 +236,31 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                 hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
                                 border: InputBorder.none,
                                 isDense: true,
-                                contentPadding: EdgeInsets.symmetric(horizontal: mq.width * .06),
+                                contentPadding: EdgeInsets.only(left: mq.width * .06),
                               ),
                             ),
                           ),
+                          _isTextEmpty
+                              ? Container()
+                              : Container(
+                                  width: mq.width * .11,
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        overlayColor: Colors.transparent,
+                                        elevation: 0,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _textController.text = "";
+                                        });
+                                      },
+                                      child: SvgPicture.asset(
+                                        "$commonPath/icon/close_icon.svg",
+                                      )),
+                                )
                         ],
                       ),
                     ),
@@ -358,7 +383,8 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                   // 결과에 따라 스낵바 표시 또는 화면 전환
                                   if (await CoupleAPIs.checkUserCouple(partner)) {
                                     await CoupleAPIs.sendCoupleRequest(partner, _selectedDate); // 요청 보내기 전 대기
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CoupleRequestSuccessScreen(partner : partner)));
+                                    Navigator.pushReplacement(
+                                        context, MaterialPageRoute(builder: (context) => CoupleRequestSuccessScreen(partner: partner)));
                                   } else {
                                     CustomDialogs.showCustomToast(context, "코드를 확인 해주세요");
                                   }

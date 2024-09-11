@@ -2,13 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-9303413330695476~5700485716</string>
-    <key>NSUserActivityTypes</key>
-    <array>
-        <string>INSendMessageIntent</string>
-        <string>INStartCallIntent</string>
-    </array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-9303413330695476~5700485716</string>
+	<key>LSApplicationCategoryType</key>
+	<string>Runner</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>INSendMessageIntent</string>
+		<string>INStartCallIntent</string>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

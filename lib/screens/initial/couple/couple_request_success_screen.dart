@@ -38,6 +38,34 @@ class _CoupleRequestSuccessScreenState extends State<CoupleRequestSuccessScreen>
 
   List<ModuUser> _partnerInfo = [];
 
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃  HomeScreen 이동 페이지 Blur ROUTE   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  Route _moveHomeRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10.0 * animation.value,
+                sigmaY: 10.0 * animation.value,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.1 * animation.value),
+              ),
+            ),
+            FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -339,7 +367,7 @@ class _CoupleRequestSuccessScreenState extends State<CoupleRequestSuccessScreen>
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+                      Navigator.of(context).pushReplacement(_moveHomeRoute());
                     },
                     style: ElevatedButton.styleFrom(
                         fixedSize: Size(mq.width * .8, mq.height * .07),

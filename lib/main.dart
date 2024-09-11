@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_lover_tale/screens/common/splash_screen.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -117,6 +118,10 @@ class _MyAppState extends State<MyApp> {
     greyColor = const Color.fromRGBO(109, 109, 109, 1);
     unselectGreyColor = const Color.fromRGBO(197, 197, 197, 1);
     commonPath = 'assets/common';
+
+    // 사이즈 요소 관련 디버그 모드
+    debugPaintSizeEnabled = false;
+
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     // ┃   앱 실행시 스플레시 스크린으로 이동   ┃
     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
