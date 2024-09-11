@@ -14,37 +14,39 @@ import 'firebase_options.dart';
 // ┃                             앱 실행 메인 화면                              ┃
 // ┃                                                                            ┃
 // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-
+// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<초기화>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 // 전영역 크기 관리 mq (Media Query) 초기화
 late Size mq;
-// 색상
-late Color whiteColor;
+// 자주 사용 하는 색상 초기화
+late Color baseWhite;
 late Color greyColor;
 late Color unselectGreyColor;
-
-// asset path
+// asset Path
 late String commonPath;
-
 // Initialize-Firebase (firebase 초기화)
 _initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
+// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<초기화>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 void main() async {
+  // WidgetFlutterBinding 인스턴스 초기화
+  WidgetsFlutterBinding.ensureInitialized();
+
   // 카카오 로그인 네이티브 앱키
   String kakaoNativeAppKey = 'cb3fa92e586e1bf7092997e5a9a9d5be';
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
-  // WidgetFlutterBinding 인스턴스 초기화
-  WidgetsFlutterBinding.ensureInitialized();
-  // 광고 초기화
+  // 구글 AdMob 초기화
   MobileAds.instance.initialize();
+
   // firebase 초기화
   await _initializeFirebase();
 
   runApp(MultiProvider(
+    // 전역 변수 관리 (MainStore)
     providers: [
       ChangeNotifierProvider(create: (c) => MainStore()),
     ],
@@ -53,11 +55,10 @@ void main() async {
       // ┃   현지화 (언어 UI) 옵션   ┃
       // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
       localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate, // Material Design 위젯 현지화
-        GlobalWidgetsLocalizations.delegate, // 일반 Flutter 위젯 현지화
-        GlobalCupertinoLocalizations.delegate, // Cupertino 위젯 현지화
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
-      // 지원 언어 및 지역
       supportedLocales: const [
         Locale('ko', ''), // 한국어
         Locale('en', ''), // 영어
@@ -66,21 +67,23 @@ void main() async {
       // ┃   전체 공통 Theme   ┃
       // ┗━━━━━━━━━━━━━━━━━━━━━┛
       theme: ThemeData(
-          // GOOGLE Ripple Effect 비 활성화
-          splashFactory: NoSplash.splashFactory,
-          // 앱바 공통 Theme
-          appBarTheme: const AppBarTheme(
-              backgroundColor: Color.fromRGBO(245, 245, 245, 1),
-              centerTitle: true,
-              titleTextStyle: TextStyle(
-                color: Color.fromRGBO(109, 109, 109, 1),
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-              ),
-              iconTheme: IconThemeData(color: Color.fromRGBO(109, 109, 109, 1))),
-          // 공통 폰트
-          fontFamily: 'Pretendard',
+        // GOOGLE Ripple Effect 비 활성화
+        splashFactory: NoSplash.splashFactory,
+        // 앱바 공통 Theme
+        appBarTheme: const AppBarTheme(
+            backgroundColor: Color.fromRGBO(245, 245, 245, 1),
+            centerTitle: true,
+            titleTextStyle: TextStyle(
+              color: Color.fromRGBO(109, 109, 109, 1),
+              fontWeight: FontWeight.w700,
+            ),
+            iconTheme: IconThemeData(color: Color.fromRGBO(109, 109, 109, 1))),
+        // 공통 폰트
+        fontFamily: 'Pretendard',
       ),
+      // ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
+      // ┃   MaterialApp - home   ┃
+      // ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
       home: const MyApp(),
     ),
   ));
@@ -97,14 +100,6 @@ class MyApp extends StatefulWidget {
 class MainStore extends ChangeNotifier {}
 
 class _MyAppState extends State<MyApp> {
-  // ┏━━━━━━━━━━━━━━━┓
-  // ┃   initState   ┃
-  // ┗━━━━━━━━━━━━━━━┛
-  @override
-  void initState() {
-    super.initState();
-  }
-
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
   // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
@@ -113,14 +108,16 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // 전역 공통 변수 관리
+    // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━<전역 공통 변수 관리>━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     mq = MediaQuery.of(context).size;
-    whiteColor = const Color.fromRGBO(245, 245, 245, 1);
+    baseWhite = const Color.fromRGBO(245, 245, 245, 1);
     greyColor = const Color.fromRGBO(109, 109, 109, 1);
     unselectGreyColor = const Color.fromRGBO(197, 197, 197, 1);
     commonPath = 'assets/common';
 
     // 사이즈 요소 관련 디버그 모드
     debugPaintSizeEnabled = false;
+    // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━<전역 공통 변수 관리>━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     // ┃   앱 실행시 스플레시 스크린으로 이동   ┃

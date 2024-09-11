@@ -64,6 +64,7 @@ class UserAPIs {
       email: APIs.user.email.toString(),
       coupleId: '',
       userCode: userCode,
+      adNotShow: false,
     );
     return await APIs.fireStore.collection('CL_USER').doc(APIs.user.uid).set(moduUser.toJson());
   }

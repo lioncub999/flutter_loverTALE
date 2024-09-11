@@ -15,6 +15,7 @@ class ModuUser {
     required this.pushToken,              // 푸시 알림용 토큰
     required this.coupleId,               // 파트너 아이디
     required this.userCode,               // 커플 등록시 유저 초대 코드
+    required this.adNotShow,              // 광고 제거 유무
   });
 
   late String id;
@@ -27,6 +28,7 @@ class ModuUser {
   late String pushToken;
   late String coupleId;
   late String userCode;
+  late bool adNotShow;
 
   ModuUser.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
@@ -39,6 +41,7 @@ class ModuUser {
     pushToken = json['push_token'] ?? '';
     coupleId = json['couple_id'] ?? '';
     userCode = json['user_code'] ?? '';
+    adNotShow = json['ad_not_show'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -53,6 +56,7 @@ class ModuUser {
     data['push_token'] = pushToken;
     data['couple_id'] = coupleId;
     data['user_code'] = userCode;
+    data['ad_not_show'] = adNotShow;
     return data;
   }
 }

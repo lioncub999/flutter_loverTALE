@@ -379,7 +379,7 @@ class _CoupleRequestSuccessScreenState extends State<CoupleRequestSuccessScreen>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text("등록완료", style: TextStyle(color: whiteColor, fontSize: mq.width * .07, fontWeight: FontWeight.w600)),
+                        Text("등록완료", style: TextStyle(color: baseWhite, fontSize: mq.width * .07, fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),

@@ -242,7 +242,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                           ),
                           _isTextEmpty
                               ? Container()
-                              : Container(
+                              : SizedBox(
                                   width: mq.width * .11,
                                   child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -366,6 +366,15 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                     return;
                                   }
 
+                                  // 만난 날이 오늘 이후로 설정된 경우 처리
+                                  if (_selectedDate.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
+                                    CustomDialogs.showCustomToast(context, "만난 날을 확인 해 주세요!");
+                                    setState(() {
+                                      _isSubmitLoading = false; // 로딩 종료
+                                    });
+                                    return;
+                                  }
+
                                   // 비동기 작업 수행
                                   ModuUser partner = ModuUser(
                                     id: '',
@@ -378,6 +387,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                     pushToken: '',
                                     coupleId: '',
                                     userCode: _textController.text,
+                                    adNotShow: false,
                                   );
 
                                   // 결과에 따라 스낵바 표시 또는 화면 전환
@@ -402,7 +412,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text("등록", style: TextStyle(color: whiteColor, fontSize: mq.width * .05, fontWeight: FontWeight.w700)),
+                                    Text("등록", style: TextStyle(color: baseWhite, fontSize: mq.width * .05, fontWeight: FontWeight.w700)),
                                   ],
                                 ),
                               ),
@@ -428,7 +438,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text("등록", style: TextStyle(color: whiteColor, fontSize: mq.width * .05, fontWeight: FontWeight.w700)),
+                                Text("등록", style: TextStyle(color: baseWhite, fontSize: mq.width * .05, fontWeight: FontWeight.w700)),
                               ],
                             ),
                           ),

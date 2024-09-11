@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lover_tale/helper/custom_page_control.dart';
 import 'package:flutter_lover_tale/screens/home_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -27,20 +28,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
-  // 애니메이션 관리 state
-  bool _isAnimate = false;
-
-  // D-day + 관련 TIMER
-  late Timer _periodicTimer;
-  late Timer _stopTimer;
-
-  // D-day opacity 처리
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  // D-day initialize
-  int _dayCount = 1;
-
   // ┏━━━━━━━━━━━━━━━┓
   // ┃   initState   ┃
   // ┗━━━━━━━━━━━━━━━┛
@@ -49,46 +36,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     super.initState();
     // D-Day + 시작
     _startTimer();
-
-    // D-Day Opacity 1 -> 0 5초
-    _controller = AnimationController(
+    // D-Day Opacity 1 -> 0  : 5초
+    _dDayController = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     );
-    _animation = Tween<double>(
+    _dDayOpacityAnimation = Tween<double>(
       begin: 1.0,
       end: 0.0,
-    ).animate(_controller)
+    ).animate(_dDayController)
       ..addListener(() {
         setState(() {});
       });
-
     // D-day Opacity 애니메이션 시작
-    _controller.forward();
-    // 1.5 초 Duration 으로 애니메이션
+    _dDayController.forward();
+    // 로고 이동 1.5 초 지연 후 실행
     Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
-        _isAnimate = true;
+        _isLogoAnimate = true;
       });
-    });
-  }
-
-  void _startTimer() {
-    // 100밀리초 간격으로 함수 실행
-    _periodicTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      _executeFunction();
-    });
-
-    // 5초 후에 타이머 종료
-    _stopTimer = Timer(const Duration(seconds: 5), () {
-      _periodicTimer.cancel();
-    });
-  }
-
-  // _dayCount +1
-  void _executeFunction() {
-    setState(() {
-      _dayCount += 1;
     });
   }
 
@@ -97,10 +63,47 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   // ┗━━━━━━━━━━━━━┛
   @override
   void dispose() {
-    _controller.dispose();
+    _dDayController.dispose();
     _periodicTimer.cancel();
     _stopTimer.cancel();
     super.dispose();
+  }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // D-day opacity 처리
+  late AnimationController _dDayController;
+  late Animation<double> _dDayOpacityAnimation;
+
+  // D-day 애니메이션 TIMER
+  late Timer _periodicTimer;
+  late Timer _stopTimer;
+
+  // 로고 애니메이션 관리 state
+  bool _isLogoAnimate = false;
+
+  // D-day 숫자
+  int _dayCount = 0;
+
+  // _dayCount +1
+  void _plusDayCount() {
+    setState(() {
+      _dayCount += 1;
+    });
+  }
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Functions>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // D-Day + 시작 함수
+  void _startTimer() {
+    // 100밀리초 간격 으로 함수 실행
+    _periodicTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      _plusDayCount();
+    });
+
+    // 5초 후에 타이머 종료
+    _stopTimer = Timer(const Duration(seconds: 5), () {
+      _periodicTimer.cancel();
+    });
   }
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
@@ -220,139 +223,20 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     if (await UserAPIs.userExists()) {
       // true : db에 데이터 있음.
       await UserAPIs.logLoginHist();
-      Navigator.of(context).pushReplacement(_moveHomeRoute());
+      Navigator.of(context).pushReplacement(CustomPageControl.movePageBlur(const HomeScreen()));
     } else {
       UserAPIs.createUser().then((value) async {
         await UserAPIs.logLoginHist();
-        Navigator.of(context).pushReplacement(_moveHomeRoute());
+        Navigator.of(context).pushReplacement(CustomPageControl.movePageBlur(const HomeScreen()));
       });
     }
   }
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Functions>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃  HomeScreen 이동 페이지 Blur ROUTE   ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  Route _moveHomeRoute() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return Stack(
-          children: [
-            BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 10.0 * animation.value,
-                sigmaY: 10.0 * animation.value,
-              ),
-              child: Container(
-                color: Colors.black.withOpacity(0.1 * animation.value),
-              ),
-            ),
-            FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
-  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
-  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: whiteColor, // Login Screen backgroundColor
-      // ┏━━━━━━━━┓
-      // ┃  Body  ┃
-      // ┗━━━━━━━━┛
-      body: Stack(
-        children: [
-          // Login Screen Title - D-Day
-          Positioned(
-            top: mq.height * .1,
-            child: SizedBox(
-              width: mq.width,
-              child: Center(
-                child: Opacity(
-                  opacity: _animation.value,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // D-Day - Text - "D+"
-                      Text(
-                        "D+",
-                        style: TextStyle(color: const Color.fromRGBO(209, 209, 209, .4), fontSize: mq.width * .25, fontWeight: FontWeight.bold),
-                      ),
-                      // D-Day - Text - NUMBER
-                      AnimatedFlipCounter(
-                        value: _dayCount,
-                        textStyle: TextStyle(fontSize: mq.width * .25, color: const Color.fromRGBO(209, 209, 209, .4), fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Login Screen Title - 로고 이미지
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 1000),
-            top: _isAnimate ? mq.height * .15 : mq.height * -.5,
-            child: SizedBox(
-              width: mq.width,
-              child: Center(
-                child: Image.asset(
-                  'assets/common/logo.png',
-                  width: mq.width * .5,
-                ),
-              ),
-            ),
-          ),
-          // Login Screen Title - "함께 러버테일에 로그인해 주세요(통 이미지)"
-          Positioned(
-            left: mq.width * .07,
-            top: mq.height * .35,
-            child: Image.asset(
-              '$commonPath/text/login_title.png',
-              width: mq.width * .8,
-            ),
-          ),
-          // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-          // ┃  Body - 애플 로그인 버튼    ┃
-          // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-          Positioned(
-            top: mq.height * .7,
-            left: mq.width * .05,
-            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("APPLE")),
-          ),
-          // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-          // ┃  Body - 카카오 로그인 버튼    ┃
-          // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-          Positioned(
-            top: mq.height * .78,
-            left: mq.width * .05,
-            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("KAKAO")),
-          ),
-          // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-          // ┃  Body - 구글 로그인 버튼    ┃
-          // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-          Positioned(
-            top: mq.height * .86,
-            left: mq.width * .05,
-            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("GOOGLE")),
-          )
-        ],
-      ),
-    );
-  }
-
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃  커스텀 로그인 버튼    ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Widget>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃  커스텀 로그인 버튼   ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
   Widget _customLoginButton(String platform) {
     return ElevatedButton(
       onPressed: () async {
@@ -409,6 +293,106 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               fontWeight: FontWeight.bold,
             ),
           ),
+        ],
+      ),
+    );
+  }
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Widget>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆화면★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: baseWhite,
+      // ┏━━━━━━━━┓
+      // ┃  Body  ┃
+      // ┗━━━━━━━━┛
+      body: Stack(
+        children: [
+          // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+          // ┃  Login Screen Title - D-Day  ┃
+          // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+          Positioned(
+            top: mq.height * .1,
+            child: SizedBox(
+              width: mq.width,
+              child: Center(
+                child: Opacity(
+                  opacity: _dDayOpacityAnimation.value,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // D-Day(Text) - "D+"
+                      Text(
+                        "D+",
+                        style: TextStyle(color: const Color.fromRGBO(209, 209, 209, .4), fontSize: mq.width * .25, fontWeight: FontWeight.bold),
+                      ),
+                      // D-Day(Text) - Day
+                      AnimatedFlipCounter(
+                        value: _dayCount,
+                        textStyle: TextStyle(color: const Color.fromRGBO(209, 209, 209, .4), fontSize: mq.width * .25, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+          // ┃  Login Screen Title - 로고 이미지  ┃
+          // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 1000),
+            top: _isLogoAnimate ? mq.height * .15 : mq.height * -.5,
+            child: SizedBox(
+              width: mq.width,
+              child: Center(
+                child: Image.asset(
+                  'assets/common/logo.png',
+                  width: mq.width * .5,
+                ),
+              ),
+            ),
+          ),
+          // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+          // ┃  Login Screen Title - "함께 러버테일에 로그인해 주세요(통 이미지)"  ┃
+          // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+          Positioned(
+            left: mq.width * .07,
+            top: mq.height * .35,
+            child: Image.asset(
+              '$commonPath/text/login_title.png',
+              width: mq.width * .8,
+            ),
+          ),
+          // ┏━━━━━━━━━━━━━━━━━━━━┓
+          // ┃  애플 로그인 버튼  ┃
+          // ┗━━━━━━━━━━━━━━━━━━━━┛
+          Positioned(
+            top: mq.height * .7,
+            left: mq.width * .05,
+            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("APPLE")),
+          ),
+          // ┏━━━━━━━━━━━━━━━━━━━━━━┓
+          // ┃  카카오 로그인 버튼  ┃
+          // ┗━━━━━━━━━━━━━━━━━━━━━━┛
+          Positioned(
+            top: mq.height * .78,
+            left: mq.width * .05,
+            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("KAKAO")),
+          ),
+          // ┏━━━━━━━━━━━━━━━━━━━━┓
+          // ┃  구글 로그인 버튼  ┃
+          // ┗━━━━━━━━━━━━━━━━━━━━┛
+          Positioned(
+            top: mq.height * .86,
+            left: mq.width * .05,
+            child: SizedBox(width: mq.width * 0.9, height: mq.height * 0.06, child: _customLoginButton("GOOGLE")),
+          )
         ],
       ),
     );

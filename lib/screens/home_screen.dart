@@ -29,15 +29,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  BannerAd? _bannerAd;
-  bool _bannerIsLoaded = false;
-
+  // ┏━━━━━━━━━━━━━━━┓
+  // ┃   initState   ┃
+  // ┗━━━━━━━━━━━━━━━┛
   @override
   void initState() {
     super.initState();
     _createBannerAd();
   }
 
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // 광고 배너 관련
+  BannerAd? _bannerAd;
+  bool _bannerIsLoaded = false;
+
+  // 배너 광고 생성
   void _createBannerAd() {
     setState(() {
       _bannerAd = BannerAd(
@@ -47,50 +53,42 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // Tap 관리 State
+  // Tap 기능 관리 State
   bool isScrollable = false;
   bool showNextIcon = false;
   bool showBackIcon = false;
 
-  // 커플 미등록시 첫 화면 닫기
-  bool coupleNextTime = true;
-
-  setCoupleNextTime() {
-    setState(() {
-      coupleNextTime = false;
-    });
-  }
-
   // 탭 별 화면
   List<TabData> tabs = [
     TabData(
-        index: 1,
+        index: 0,
         title: const Tab(
           child: Text('     홈     '),
         ),
         content: const MainScreen()),
     TabData(
-      index: 2,
+      index: 1,
       title: const Tab(
         child: Text('  이야기  '),
       ),
       content: StoryScreen(),
     ),
     TabData(
-      index: 3,
+      index: 2,
       title: const Tab(
         child: Text('추억 지도'),
       ),
       content: const HistMapScreen(),
     ),
     TabData(
-      index: 4,
+      index: 3,
       title: const Tab(
         child: Text('  내정보  '),
       ),
       content: const MypageScreen(),
     ),
   ];
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆┃
@@ -108,7 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
               backgroundColor: Colors.white,
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(
+                  child: CircularProgressIndicator(
+                color: Colors.black,
+              )),
             );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -119,23 +120,25 @@ class _HomeScreenState extends State<HomeScreen> {
             if (APIs.me.id.isEmpty) {
               return const LoginScreen();
             }
-            // ┏━━━━━━━━━━━━━━━━━━━━━━┓
-            // ┃  기본정보 등록 확인  ┃
-            // ┗━━━━━━━━━━━━━━━━━━━━━━┛
-            if (APIs.me.gender.isNotEmpty && APIs.me.birthDay.isNotEmpty) {
+            // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+            // ┃  기본 정보 등록 확인 (이름 & 성별 & 생일)  ┃
+            // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+            if (APIs.me.name.isNotEmpty && APIs.me.gender.isNotEmpty && APIs.me.birthDay.isNotEmpty) {
               return Scaffold(
                 // ┏━━━━━━━━━━━━┓
                 // ┃   AppBar   ┃
                 // ┗━━━━━━━━━━━━┛
                 appBar: AppBar(
-                  // AppBar - Title
                   title: SvgPicture.asset(
                     '$commonPath/logo/lover_tale_logo.svg',
                     width: mq.width * .05,
                     height: mq.width * .05,
                   ),
-                  // AppBar - Action
+                  // AppBar - Actions
                   actions: [
+                    // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                    // ┃   AppBar - actions - 알림  ┃
+                    // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
                     ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(Colors.transparent),
@@ -144,11 +147,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         elevation: WidgetStateProperty.all(0),
                       ),
                       onPressed: () async {
-                        // 비동기 작업 2: Firebase 로그아웃 임시
                         await APIs.auth.signOut();
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
                       },
-                      child: SvgPicture.asset("$commonPath/icon/alert_icon.svg", width: mq.width * .035,),
+                      child: SvgPicture.asset(
+                        "$commonPath/icon/alert_icon.svg",
+                        width: mq.width * .035,
+                      ),
                     )
                   ],
                 ),
@@ -157,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     // ┃   Body - Tap + 화면   ┃
                     // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
                     Container(
-                  color: whiteColor,
+                  color: baseWhite,
                   width: mq.width,
                   child: Column(
                     children: [
@@ -182,20 +187,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       // ┗━━━━━━━━━━━━━┛
                       _bannerAd == null && _bannerIsLoaded
                           ? Container()
-                          : Container(
-                              color: Colors.white,
-                              width: mq.width ,
-                              height: mq.height * .07,
-                              child: Center(
-                                child: Container(
-                                  width: mq.width * .9,
+                          // 계정 광고 제거 결재 체크
+                          : APIs.me.adNotShow
+                              ? Container()
+                              : Container(
                                   color: Colors.white,
-                                  child: AdWidget(
-                                    ad: _bannerAd!,
-                                  ),
-                                ),
-                              )
-                            ),
+                                  width: mq.width,
+                                  height: mq.height * .07,
+                                  child: Center(
+                                    child: Container(
+                                      width: mq.width * .9,
+                                      color: Colors.white,
+                                      child: AdWidget(
+                                        ad: _bannerAd!,
+                                      ),
+                                    ),
+                                  )),
+                      // ┏━━━━━━━━━━━━━━━━━━┓
+                      // ┃  광고 하단 공백  ┃
+                      // ┗━━━━━━━━━━━━━━━━━━┛
                       Container(
                         color: Colors.white,
                         height: mq.height * .03,

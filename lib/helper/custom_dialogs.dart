@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +50,9 @@ class CustomDialogs {
         barrierDismissible: false,
         barrierColor: Colors.black54,
         builder: (_) => const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
             ));
   }
 }

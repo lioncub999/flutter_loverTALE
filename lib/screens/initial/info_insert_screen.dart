@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_lover_tale/helper/custom_date_util.dart';
+import 'package:flutter_lover_tale/helper/custom_dialogs.dart';
+import 'package:flutter_lover_tale/helper/custom_page_control.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../apis/apis.dart';
@@ -25,19 +28,6 @@ class InfoInsertScreen extends StatefulWidget {
 }
 
 class _InfoInsertScreenState extends State<InfoInsertScreen> {
-  // 성별 선택
-  late String _selectedGender = 'M';
-
-  // 생일 선택
-  late bool _isDateSelected = false;
-  DateTime _selectedDate = DateTime.now();
-
-  // 포커스 노드
-  final FocusNode _focusNode = FocusNode();
-
-  // 채팅창 TextField 컨트롤러
-  final _textController = TextEditingController(text: APIs.me.name);
-
   // ┏━━━━━━━━━━━━━━━┓
   // ┃   initState   ┃
   // ┗━━━━━━━━━━━━━━━┛
@@ -45,11 +35,6 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
   void initState() {
     super.initState();
     _textController.addListener(_onTextChanged);
-  }
-
-  // 텍스트 필드 입력시 스테이트 업데이트
-  void _onTextChanged() {
-    setState(() {});
   }
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
@@ -61,6 +46,52 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
     _focusNode.dispose();
     super.dispose();
   }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  // 성별 선택
+  String _selectedGender = 'M';
+
+  // 생일 선택
+  bool _isDateSelected = false;
+  DateTime _selectedDate = DateTime.now();
+
+  // 포커스 노드
+  final FocusNode _focusNode = FocusNode();
+
+  // 채팅창 TextField 컨트롤러
+  final _textController = TextEditingController(text: APIs.me.name);
+
+  // 텍스트 필드 입력시 스테이트 업데이트
+  void _onTextChanged() {
+    setState(() {});
+  }
+
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Function>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  void _updateUserInfo() async {
+    final birthDay = _selectedDate.millisecondsSinceEpoch.toString();
+    ModuUser user = ModuUser(
+      image: '',
+      gender: _selectedGender == 0 ? 'M' : 'G',
+      name: _textController.text,
+      birthDay: birthDay,
+      createdAt: '',
+      id: '',
+      email: '',
+      pushToken: '',
+      coupleId: '',
+      userCode: '',
+      adNotShow: false,
+    );
+    try {
+      await UserAPIs.updateUserDefaultInfo(user);
+      Navigator.pushReplacement(context, CustomPageControl.movePageBlur(const HomeScreen()));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Function>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
   // ┃   ios 날짜 선택 UI   ┃
@@ -75,6 +106,7 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
               initialDateTime: _selectedDate,
               mode: CupertinoDatePickerMode.date,
               onDateTimeChanged: (DateTime newDate) {
+                print(_selectedDate);
                 setState(() {
                   _selectedDate = newDate;
                   _isDateSelected = true;
@@ -100,44 +132,14 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
         },
         child: Row(
           children: [
-            isSelected
-                ? SvgPicture.asset('assets/common/checkboxChecked.svg')
-                : SvgPicture.asset('assets/common/checkbox.svg'),
+            isSelected ? SvgPicture.asset('assets/common/checkboxChecked.svg') : SvgPicture.asset('assets/common/checkbox.svg'),
             Text(
               text,
-              style: const TextStyle(color: Color.fromRGBO(109, 109, 109, 1), fontSize: 18),
+              style: TextStyle(color: greyColor, fontSize: 18),
             )
           ],
         ),
       ),
-    );
-  }
-
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃  HomeScreen 이동 페이지 Blur ROUTE   ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  Route _moveHomeRoute() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return Stack(
-          children: [
-            BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 10.0 * animation.value,
-                sigmaY: 10.0 * animation.value,
-              ),
-              child: Container(
-                color: Colors.black.withOpacity(0.1 * animation.value),
-              ),
-            ),
-            FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -149,18 +151,34 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // ┏━━━━━━━━━━━━┓
+      // ┃   AppBar   ┃
+      // ┗━━━━━━━━━━━━┛
       appBar: AppBar(
-        title: const Text("기본 정보 입력"),
+        title: Text("기본 정보 입력", style: TextStyle(fontSize: mq.width * .05, color: greyColor)),
+        // AppBar - actions - 닫기 (로그아웃)
         actions: [
-          IconButton(onPressed: () async {
-            // 비동기 작업 2: Firebase 로그아웃
-            await APIs.auth.signOut();
-            Navigator.pushAndRemoveUntil(
-                context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
-          }, icon: const Icon(Icons.clear))
+          SizedBox(
+            width: mq.width * .13,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  overlayColor: Colors.transparent,
+                  elevation: 0,
+                ),
+                onPressed: () async {
+                  await APIs.auth.signOut();
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+                },
+                child: SvgPicture.asset(
+                  "$commonPath/icon/close_icon.svg",
+                )),
+          )
         ],
       ),
-      backgroundColor: const Color.fromRGBO(245, 245, 245, 1), // LoginScreen backgroundColor
+      backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
       // ┏━━━━━━━━┓
       // ┃  Body  ┃
       // ┗━━━━━━━━┛
@@ -174,14 +192,15 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
           height: mq.height,
           child: Column(
             children: [
-              // 위쪽 여백
+              // ┏━━━━━━━━━━━━━━━━━━━━┓
+              // ┃  Body - 상단 여백  ┃
+              // ┗━━━━━━━━━━━━━━━━━━━━┛
               SizedBox(
-                width: mq.width,
                 height: mq.height * .04,
               ),
-              // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-              // ┃  Body - 이름 입력 TextField ┃
-              // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+              // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+              // ┃  Body - 이름 입력 TextField  ┃
+              // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
               SizedBox(
                 width: mq.width * .85,
                 child: Column(
@@ -190,11 +209,7 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                     // 이름 - TEXT
                     Container(
                       padding: EdgeInsets.only(left: mq.width * .05),
-                      child: const Text("이름",
-                          style: TextStyle(
-                              color: Color.fromRGBO(109, 109, 109, 1),
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16)),
+                      child: Text("이름", style: TextStyle(color: greyColor, fontWeight: FontWeight.w800, fontSize: mq.width * .04)),
                     ),
                     // 이름 - TEXT FIELD
                     Card(
@@ -205,44 +220,44 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                       elevation: 0,
                       child: SizedBox(
                         width: mq.width,
-                        height: mq.height * .05,
-                        child: Stack(
+                        height: mq.height * .06,
+                        child: Row(
                           children: [
-                            TextField(
-
-                              inputFormatters: [_LengthLimitingTextInputFormatterFixed(20)],
-                              focusNode: _focusNode,
-                              controller: _textController,
-                              style: const TextStyle(fontSize: 16, letterSpacing: -0.24),
-                              decoration: InputDecoration(
-                                hintText: '이름 (최대 20자)',
-                                hintStyle: const TextStyle(
-                                    color: Color.fromRGBO(188, 188, 188, 1), fontSize: 16),
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.only(
-                                    left: mq.width * .04,
-                                    right: mq.width * .1,
-                                    top: mq.height * .01,
-                                    bottom: mq.height * .01),
+                            Expanded(
+                              child: TextField(
+                                inputFormatters: [_LengthLimitingTextInputFormatterFixed(10)],
+                                focusNode: _focusNode,
+                                controller: _textController,
+                                style: TextStyle(fontSize: mq.width * .04, letterSpacing: -0.24),
+                                decoration: InputDecoration(
+                                  hintText: '이름 (최대 10자)',
+                                  hintStyle: TextStyle(color: const Color.fromRGBO(188, 188, 188, 1), fontSize: mq.width * .04),
+                                  border: InputBorder.none,
+                                  focusColor: greyColor,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: mq.width * .045),
+                                ),
                               ),
                             ),
                             // TEXT FIELD 초기화 버튼
                             _textController.text != ''
-                                ? Positioned(
-                                    top: -mq.height * .002,
-                                    right: 0,
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.cancel,
-                                        color: Color.fromRGBO(188, 188, 188, 1),
-                                        size: 20,
-                                      ),
-                                      onPressed: () {
-                                        _textController.clear();
-                                        setState(() {});
-                                      },
-                                    ),
+                                ? SizedBox(
+                                    width: mq.width * .13,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          backgroundColor: Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                          overlayColor: Colors.transparent,
+                                          elevation: 0,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _textController.text = "";
+                                          });
+                                        },
+                                        child: SvgPicture.asset(
+                                          "$commonPath/icon/close_icon.svg",
+                                        )),
                                   )
                                 : Container(),
                           ],
@@ -252,9 +267,10 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                   ],
                 ),
               ),
-              // 여백
+              // ┏━━━━━━━━┓
+              // ┃  여백  ┃
+              // ┗━━━━━━━━┛
               SizedBox(
-                width: mq.width,
                 height: mq.height * .03,
               ),
               // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -266,21 +282,17 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: mq.width * .03),
-                      child: const Text("성별",
-                          style: TextStyle(
-                              color: Color.fromRGBO(109, 109, 109, 1),
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16)),
+                      padding: EdgeInsets.only(left: mq.width * .05),
+                      child: Text("성별", style: TextStyle(color: greyColor, fontWeight: FontWeight.w800, fontSize: mq.width * .04)),
                     ),
                     Container(
                       height: mq.height * .05,
-                      margin: EdgeInsets.only(left: mq.width * .04, top: mq.height * .005),
+                      margin: EdgeInsets.only(left: mq.width * .05, top: mq.height * .01),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           _buildCustomRadioButton('남성', 'M'),
-                          const SizedBox(width: 10),
+                          SizedBox(width: mq.width * .03),
                           _buildCustomRadioButton('여성', 'G'),
                         ],
                       ),
@@ -288,9 +300,10 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                   ],
                 ),
               ),
-              // 여백
+              // ┏━━━━━━━━┓
+              // ┃  여백  ┃
+              // ┗━━━━━━━━┛
               SizedBox(
-                width: mq.width,
                 height: mq.height * .03,
               ),
               // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -301,37 +314,30 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                 height: mq.height * .15,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     Container(
-                      padding: EdgeInsets.only(left: mq.width * .03),
-                      child: const Text("생년월일",
-                          style: TextStyle(
-                              color: Color.fromRGBO(109, 109, 109, 1),
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16)),
+                      padding: EdgeInsets.only(left: mq.width * .05),
+                      child: Text("생년월일", style: TextStyle(color: greyColor, fontWeight: FontWeight.w800, fontSize: mq.width * .04)),
                     ),
                     GestureDetector(
                       onTap: () => _showCupertinoDatePicker(context),
                       child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
+                          padding: EdgeInsets.symmetric(vertical: mq.width * .05, horizontal: mq.height * .04),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               _isDateSelected
                                   ? Text(
-                                      '${_selectedDate.year}년 ${_selectedDate.month}월 ${_selectedDate.day}일',
-                                      style: const TextStyle(
-                                          fontSize: 16.0, color: Color.fromRGBO(109, 109, 109, 1)),
+                                      CustomDateUtil.getOrgTime(
+                                          context: context, date: _selectedDate.millisecondsSinceEpoch.toString(), returnType: "korYMD"),
+                                      style: TextStyle(fontSize: mq.width * .04, color: greyColor),
                                     )
-                                  : const Text(
-                                      '내 생일을 선택 해주세요.',
+                                  : Text(
+                                      '태어난 날짜를 선택해 주세요.',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        color: Color.fromRGBO(109, 109, 109, 1),
-                                        fontSize: 16.0,
+                                        color: greyColor,
+                                        fontSize: mq.width * .04,
                                       ),
                                     ),
                               SvgPicture.asset('assets/common/arrowBottom.svg')
@@ -353,50 +359,31 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
           height: mq.height * 0.08,
           child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: _textController.text != '' && _isDateSelected
+                // 이름, 성별, 생년 월일 입력 확인
+                backgroundColor: _textController.text != '' && _selectedGender.isNotEmpty && _isDateSelected
                     ? const Color.fromRGBO(255, 135, 81, 1)
-                    : const Color.fromRGBO(181, 181, 181, 1), // Btn-BackgroundColor
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(0))), // Btn-Shape
+                    : const Color.fromRGBO(181, 181, 181, 1),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
               ),
-              onPressed: _textController.text != '' && _isDateSelected
-                  ? () async {
-                      final birthDay = _selectedDate.millisecondsSinceEpoch.toString();
-                      ModuUser user = ModuUser(
-                        image: '',
-                        gender: _selectedGender == 0 ? 'M' : 'G',
-                        name: _textController.text,
-                        birthDay: birthDay,
-                        createdAt: '',
-                        id: '',
-                        email: '',
-                        pushToken: '',
-                        coupleId: '',
-                        userCode: '',
-                      );
-                      try {
-                        await UserAPIs.updateUserDefaultInfo(user);
-                      } catch (e) {
-                        rethrow;
-                      }
-                      Navigator.pushReplacement(context, _moveHomeRoute());
-                    }
+              onPressed: _textController.text != '' && _selectedGender.isNotEmpty && _isDateSelected
+                  ? _selectedDate.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch
+                      ? () {
+                          _updateUserInfo();
+                        }
+                      : () {
+                          CustomDialogs.showCustomToast(context, "생일을 확인 해 주세요!");
+                        }
                   : () {},
-              // 로그인 버튼
               label: RichText(
-                text:
-                    const TextSpan(style: TextStyle(color: Colors.black, fontSize: 16), children: [
-                  TextSpan(
-                      text: '시작하기',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w800, fontSize: 25)),
-                ]),
+                text: TextSpan(text: '시작하기', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: mq.width * .07)),
               ))),
     );
   }
 }
 
-// 글자수 오버 방지
+// ┏━━━━━━━━━━━━━━━━━━━━━┓
+// ┃  글자수 오버 체크   ┃
+// ┗━━━━━━━━━━━━━━━━━━━━━┛
 class _LengthLimitingTextInputFormatterFixed extends TextInputFormatter {
   final int maxLength;
 
