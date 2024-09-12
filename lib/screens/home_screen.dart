@@ -88,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
       content: const MypageScreen(),
     ),
   ];
+
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -140,11 +141,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     // ┃   AppBar - actions - 알림  ┃
                     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
                     ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                        shadowColor: WidgetStateProperty.all(Colors.transparent),
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
-                        elevation: WidgetStateProperty.all(0),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        overlayColor: Colors.transparent,
+                        elevation: 0,
                       ),
                       onPressed: () async {
                         await APIs.auth.signOut();

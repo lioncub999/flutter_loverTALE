@@ -104,11 +104,11 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
           actions: [
             // 내 코드 복사 버튼
             ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                shadowColor: WidgetStateProperty.all(Colors.transparent),
-                overlayColor: WidgetStateProperty.all(Colors.transparent),
-                elevation: WidgetStateProperty.all(0),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                overlayColor: Colors.transparent,
+                elevation: 0,
               ),
               onPressed: () async {
                 Clipboard.setData(ClipboardData(text: APIs.me.userCode));
