@@ -93,7 +93,7 @@ class _CoupleRequestSuccessScreenState extends State<CoupleRequestSuccessScreen>
                     }
                   })),
 
-          // Title - ㅇㅇㅇ 이야기가 시작되었습니다!
+          // Title - 이야기가 시작되었습니다!
           AnimatedPositioned(
             duration: const Duration(seconds: 1),
             top: mq.height * .17,

@@ -57,7 +57,6 @@ class CoupleAPIs {
   *   1. 파트너 "user_code" 로 유저 정보 가져옴.
   *   2. 가져온 정보로 couple_req 에 들어갈 member 리스트 값 넣어줌
   *   3. 내 아이디, 파트너 아이디로 조함한 getCoupleReqId로 요청 아이디 생성
-  *   4. 'CL_COUPLE_REQ' 컬렉션에 데이터 넣기
   * */
   static Future<void> sendCoupleRequest(ModuUser partner, DateTime loveStartDay) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
@@ -92,17 +91,14 @@ class CoupleAPIs {
     }
   }
 
-  // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-  // ┃   ● 커플 요청 수락                                                   ┃
-  // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-  /*
-  * TODO :
-  *  1. REQ 의 member 리스트에 있는 두명의 유저 컬렉션에 couple_id 값을 요청 아이디로 업데이트 <- 커플 아이디와 값 같음
-  *  2. 'CL_COUPLE' 컬렉션에 커플 아이디로 문서 생성 후 cre_dtm, love_start_day 세팅
+// ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃   ● 커플 아이디로 COUPLE DOC 전체 내용                               ┃
+// ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+/*
+  *  TODO :
+  *   1. coupleId 로 'CL_COUPLE' 컬렉션의 coupleId(doc) 전체 내용 가져오기
   * */
-  static Future<void> confirmCouple(Couple req) async {
-    await APIs.fireStore.collection('CL_USER').doc(req.member[0]).update({'couple_id': req.id});
-    await APIs.fireStore.collection('CL_USER').doc(req.member[1]).update({'couple_id': req.id});
-    await APIs.fireStore.collection('CL_COUPLE').doc(req.id).set({'cre_dtm' : DateTime.now().millisecondsSinceEpoch});
+  static Future<QuerySnapshot<Map<String, dynamic>>> getCoupleInfo(ModuUser user) async {
+    return await APIs.fireStore.collection('CL_COUPLE').where('id', isEqualTo: user.coupleId).get();
   }
 }

@@ -65,7 +65,6 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
   void _onTextChanged() {
     setState(() {});
   }
-
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Function>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
   void _updateUserInfo() async {
@@ -90,7 +89,6 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
       rethrow;
     }
   }
-
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<Function>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
