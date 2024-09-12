@@ -99,8 +99,9 @@ class _StoryScreenState extends State<StoryScreen> {
                       }
 
                       return Container(
+                        color: baseWhite,
                         width: mq.width * .1,
-                        height: mq.height * .1,
+                        height: mq.width * .09,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start, // 텍스트와 아이콘을 중앙 정렬
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -109,8 +110,8 @@ class _StoryScreenState extends State<StoryScreen> {
                             && _focusDate.day == day.day
                             ?
                             Container(
-                              width: mq.width * .054,
-                              height: mq.width * .054,
+                              width: mq.width * .05,
+                              height: mq.width * .05,
                               decoration: BoxDecoration(
                                   color: Color.fromRGBO(216, 219, 230, 1.0),
                                 borderRadius: BorderRadius.circular(mq.width * .025)
@@ -119,14 +120,17 @@ class _StoryScreenState extends State<StoryScreen> {
                                 alignment: Alignment.topCenter,
                                 child: Text(
                                   day.day.toString(),
-                                  style: TextStyle(color: dayColor),
+                                  style: TextStyle(color: dayColor, fontSize: mq.width * .035),
                                 ),
                               )
                             )
                             :
-                            Text(
-                              day.day.toString(),
-                              style: TextStyle(color: dayColor),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                day.day.toString(),
+                                style: TextStyle(color: dayColor, fontSize: mq.width * .035),
+                              ),
                             )
                             ,
                             Row(
