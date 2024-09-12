@@ -61,6 +61,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
   // 만난 날 선택 관리
   late bool _isDateSelected = false;
   DateTime _selectedDate = DateTime.now();
+
   // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<State>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
   // ┏━━━━━━━━━━━━━━━━━━━━━━┓
@@ -85,7 +86,6 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
           );
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -147,12 +147,28 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       children: [
                         // 좌측 여백
                         SizedBox(
-                          width: mq.width * .05,
+                          width: mq.width * .1,
                         ),
                         // 좌측 문구 - "시작 전 커플 등록이 필요해요!"
                         SizedBox(
-                          width: mq.width * .55,
-                          child: Image.asset("$commonPath/text/couple_sign_text.png"),
+                          width: mq.width * .5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "시작 전",
+                                style: TextStyle(color: greyColor, fontSize: mq.width * .09, fontWeight: FontWeight.w800),
+                              ),
+                              Text(
+                                "커플 등록이",
+                                style: TextStyle(color: greyColor, fontSize: mq.width * .09, fontWeight: FontWeight.w800),
+                              ),
+                              Text(
+                                "필요해요!",
+                                style: TextStyle(color: greyColor, fontSize: mq.width * .09, fontWeight: FontWeight.w800),
+                              )
+                            ],
+                          ),
                         ),
                         // 우측 캐릭터
                         SizedBox(
@@ -333,7 +349,10 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                     child: _isDateSelected
                                         ? Center(
                                             child: Text(
-                                              CustomDateUtil.getOrgTime(context: context, date: _selectedDate.millisecondsSinceEpoch.toString(), returnType: "onlyMiddleBar"),
+                                              CustomDateUtil.getOrgTime(
+                                                  context: context,
+                                                  date: _selectedDate.millisecondsSinceEpoch.toString(),
+                                                  returnType: "onlyMiddleBar"),
                                               style: TextStyle(fontSize: mq.width * .035, color: greyColor),
                                             ),
                                           )
@@ -378,9 +397,9 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromRGBO(250, 210, 192, 1.0),
-                                  spreadRadius: 3, // 그림자 퍼짐 정도
-                                  blurRadius: 10, // 그림자의 흐려짐 정도
-                                  offset: Offset(0, 4), // 그림자의 위치 (x축, y축 이동값)
+                                  spreadRadius: 2, // 그림자 퍼짐 정도
+                                  blurRadius: 3, // 그림자의 흐려짐 정도
+                                  offset: Offset(0, 2), // 그림자의 위치 (x축, y축 이동값)
                                 )
                               ]),
                               child: ElevatedButton(
@@ -460,10 +479,10 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                       : Container(
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), boxShadow: const [
                             BoxShadow(
-                              color: Color.fromRGBO(188, 188, 188, 1.0),
+                              color: Color.fromRGBO(224, 224, 224, 1.0),
                               spreadRadius: 1, // 그림자 퍼짐 정도
-                              blurRadius: 10, // 그림자의 흐려짐 정도
-                              offset: Offset(0, 0), // 그림자의 위치 (x축, y축 이동값)
+                              blurRadius: 2, // 그림자의 흐려짐 정도
+                              offset: Offset(0, 2), // 그림자의 위치 (x축, y축 이동값)
                             )
                           ]),
                           child: ElevatedButton(

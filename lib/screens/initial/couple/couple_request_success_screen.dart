@@ -353,10 +353,10 @@ class _CoupleRequestSuccessScreenState extends State<CoupleRequestSuccessScreen>
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), boxShadow: const [
                 BoxShadow(
-                  color: Color.fromRGBO(253, 150, 150, 1.0),
-                  spreadRadius: 1, // 그림자 퍼짐 정도
-                  blurRadius: 10, // 그림자의 흐려짐 정도
-                  offset: Offset(0, 0), // 그림자의 위치 (x축, y축 이동값)
+                  color: Color.fromRGBO(255, 200, 200, 1.0),
+                  spreadRadius: 2, // 그림자 퍼짐 정도
+                  blurRadius: 3, // 그림자의 흐려짐 정도
+                  offset: Offset(0, 2), // 그림자의 위치 (x축, y축 이동값)
                 )
               ]),
               child: ElevatedButton(

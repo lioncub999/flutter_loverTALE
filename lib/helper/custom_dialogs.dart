@@ -22,7 +22,7 @@ class CustomDialogs {
           height: mq.height * .05,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(mq.width * .25),
-            color: const Color.fromRGBO(200, 226, 255, 1.0),
+            color: const Color.fromRGBO(200, 226, 255, .7),
           ),
           child: Center(
             child: Text(
@@ -33,7 +33,7 @@ class CustomDialogs {
         );
       }),
       mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       mobilePositionSettings: MobilePositionSettings(
         bottomOnAppearance: mq.height * .21,
         bottomOnDissapear: mq.height * .18,
