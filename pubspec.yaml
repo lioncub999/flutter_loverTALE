@@ -95,6 +95,7 @@ flutter:
     - assets/common/text/
     - assets/common/character/
     - assets/common/etc/
+    - assets/common/emoji/
 
   fonts:
     - family: Pretendard

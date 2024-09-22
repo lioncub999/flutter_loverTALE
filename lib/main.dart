@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_lover_tale/screens/common/splash_screen.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -44,6 +45,12 @@ void main() async {
 
   // firebase 초기화
   await _initializeFirebase();
+
+  // 세로 모드 고정
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(MultiProvider(
     // 전역 변수 관리 (MainStore)
