@@ -92,7 +92,7 @@ class _StoryScreenState extends State<StoryScreen> {
                     todayColor: Colors.black,
                     selectedTodayColor: Colors.black,
                     hideTodayIcon: true,
-                    displayMonthTextStyle: TextStyle(color: greyColor, fontSize: mq.width * .065),
+                    displayMonthTextStyle: TextStyle(color: Color.fromRGBO(109, 109, 109, 1.0), fontSize: mq.width * .065),
                     locale: 'ko',
                     isExpanded: true,
                     expandableDateFormat: 'yyyy MMMM dd., EEEE',
