@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lover_tale/screens/story/story_write_screen.dart';
 import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -92,7 +93,7 @@ class _StoryScreenState extends State<StoryScreen> {
                     todayColor: Colors.black,
                     selectedTodayColor: Colors.black,
                     hideTodayIcon: true,
-                    displayMonthTextStyle: TextStyle(color: Color.fromRGBO(109, 109, 109, 1.0), fontSize: mq.width * .065),
+                    displayMonthTextStyle: TextStyle(color: greyColor, fontSize: mq.width * .065),
                     locale: 'ko',
                     isExpanded: true,
                     expandableDateFormat: 'yyyy MMMM dd., EEEE',
@@ -108,7 +109,7 @@ class _StoryScreenState extends State<StoryScreen> {
                       if (day.weekday == DateTime.sunday) {
                         dayColor = const Color.fromRGBO(255, 122, 122, 1.0); // 현재 달의 일요일
                       } else if (day.weekday == DateTime.saturday) {
-                        dayColor = const Color.fromRGBO(255, 135, 81, 1); // 현재 달의 토요일
+                        dayColor = orangeColor; // 현재 달의 토요일
                       }
                       if (day.month != _focusDate.month) {
                         dayColor = const Color.fromRGBO(214, 214, 214, 1.0); // 이전 달 또는 다음 달의 날짜
@@ -172,7 +173,7 @@ class _StoryScreenState extends State<StoryScreen> {
             // ┃  하단 컨텐츠  ┃
             // ┗━━━━━━━━━━━━━━━┛
             ConstrainedBox(
-              constraints: BoxConstraints(minWidth: mq.width, minHeight: mq.height * .4),
+              constraints: BoxConstraints(minWidth: mq.width, minHeight: mq.height * .43),
               child: Container(
                 color: Colors.white,
                 child: Stack(children: [
@@ -234,14 +235,14 @@ class _StoryScreenState extends State<StoryScreen> {
                                     elevation: 0,
                                   ),
                                   onPressed: () {
-                                    print(_focusDate);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => StoryWriteScreen()));
                                   },
                                   child: Row(
                                     children: [
                                       Text(
                                         "다이어리 작성하기 ",
                                         style: TextStyle(
-                                            fontSize: mq.width * .04, color: Color.fromRGBO(255, 135, 81, 1.0), fontWeight: FontWeight.w700),
+                                            fontSize: mq.width * .04, color: orangeColor, fontWeight: FontWeight.w700),
                                       ),
                                       SvgPicture.asset(
                                         "$commonPath/line_arrow_right.svg",
@@ -329,7 +330,6 @@ class _StoryScreenState extends State<StoryScreen> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -353,9 +353,9 @@ class _StoryScreenState extends State<StoryScreen> {
       Color textColor;
 
       if (i == 0) {
-        textColor = Color.fromRGBO(255, 122, 122, 1.0); // 일요일 색상
+        textColor = const Color.fromRGBO(255, 122, 122, 1.0); // 일요일 색상
       } else if (i == 6) {
-        textColor = Color.fromRGBO(255, 135, 81, 1.0); // 토요일 색상
+        textColor = orangeColor; // 토요일 색상
       } else {
         textColor = Colors.black; // 다른 요일 색상
       }

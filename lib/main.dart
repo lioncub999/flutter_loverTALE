@@ -22,6 +22,9 @@ late Size mq;
 late Color baseWhite;
 late Color greyColor;
 late Color unselectGreyColor;
+late Color lightGreyColor;
+late Color orangeColor;
+late Color hintColor;
 // asset Path
 late String commonPath;
 // Initialize-Firebase (firebase 초기화)
@@ -77,14 +80,14 @@ void main() async {
         // GOOGLE Ripple Effect 비 활성화
         splashFactory: NoSplash.splashFactory,
         // 앱바 공통 Theme
-        appBarTheme: const AppBarTheme(
-            backgroundColor: Color.fromRGBO(245, 245, 245, 1),
+        appBarTheme: AppBarTheme(
+            backgroundColor: baseWhite,
             centerTitle: true,
             titleTextStyle: TextStyle(
-              color: Color.fromRGBO(109, 109, 109, 1),
+              color:greyColor,
               fontWeight: FontWeight.w700,
             ),
-            iconTheme: IconThemeData(color: Color.fromRGBO(109, 109, 109, 1))),
+            iconTheme: IconThemeData(color: greyColor)),
         // 공통 폰트
         fontFamily: 'Pretendard',
       ),
@@ -120,6 +123,10 @@ class _MyAppState extends State<MyApp> {
     baseWhite = const Color.fromRGBO(245, 245, 245, 1);
     greyColor = const Color.fromRGBO(109, 109, 109, 1);
     unselectGreyColor = const Color.fromRGBO(197, 197, 197, 1);
+    lightGreyColor = const Color.fromRGBO(230, 230, 230, 1.0);
+    orangeColor = const Color.fromRGBO(255, 135, 81, 1);
+    hintColor = const Color.fromRGBO(188, 188, 188, 1.0);
+
     commonPath = 'assets/common';
 
     // 사이즈 요소 관련 디버그 모드

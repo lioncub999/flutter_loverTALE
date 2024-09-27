@@ -94,4 +94,28 @@ class CustomDateUtil {
     }
     return anniversaries;
   }
+
+  // ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+  // ┃   요일 구하기         ┃
+  // ┗━━━━━━━━━━━━━━━━━━━━━━━┛
+  static String calculateWeekName(DateTime date) {
+    String calculatedWeekName = "오류";
+    date.weekday == 1
+        ? calculatedWeekName = "월"
+        : date.weekday == 2
+            ? calculatedWeekName = "화"
+            : date.weekday == 3
+                ? calculatedWeekName = "수"
+                : date.weekday == 4
+                    ? calculatedWeekName = "목"
+                    : date.weekday == 5
+                        ? calculatedWeekName = "금"
+                        : date.weekday == 6
+                            ? calculatedWeekName = "토"
+                            : date.weekday == 7
+                                ? calculatedWeekName = "일"
+                                : calculatedWeekName = "오류";
+
+    return calculatedWeekName;
+  }
 }

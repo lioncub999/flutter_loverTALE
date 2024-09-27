@@ -176,7 +176,7 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
           )
         ],
       ),
-      backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
+      backgroundColor: baseWhite,
       // ┏━━━━━━━━┓
       // ┃  Body  ┃
       // ┗━━━━━━━━┛
@@ -211,7 +211,7 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                     ),
                     // 이름 - TEXT FIELD
                     Card(
-                      color: const Color.fromRGBO(230, 230, 230, 1),
+                      color: lightGreyColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -229,7 +229,7 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
                                 style: TextStyle(fontSize: mq.width * .04, letterSpacing: -0.24),
                                 decoration: InputDecoration(
                                   hintText: '이름 (최대 10자)',
-                                  hintStyle: TextStyle(color: const Color.fromRGBO(188, 188, 188, 1), fontSize: mq.width * .04),
+                                  hintStyle: TextStyle(color: hintColor, fontSize: mq.width * .04),
                                   border: InputBorder.none,
                                   focusColor: greyColor,
                                   contentPadding: EdgeInsets.symmetric(horizontal: mq.width * .045),
@@ -359,7 +359,7 @@ class _InfoInsertScreenState extends State<InfoInsertScreen> {
               style: ElevatedButton.styleFrom(
                 // 이름, 성별, 생년 월일 입력 확인
                 backgroundColor: _textController.text != '' && _selectedGender.isNotEmpty && _isDateSelected
-                    ? const Color.fromRGBO(255, 135, 81, 1)
+                    ? orangeColor
                     : const Color.fromRGBO(181, 181, 181, 1),
                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
               ),

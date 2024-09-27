@@ -249,8 +249,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             : platform == "KAKAO"
                 ? const Color.fromRGBO(252, 215, 50, 1.0)
                 : platform == "GOOGLE"
-                    ? const Color.fromRGBO(245, 245, 245, 1.0)
-                    : const Color.fromRGBO(245, 245, 245, 1.0),
+                    ? baseWhite
+                    : baseWhite,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

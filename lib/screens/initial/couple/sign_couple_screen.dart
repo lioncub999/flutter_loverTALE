@@ -361,7 +361,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                               '날짜 선택',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
-                                                  color: const Color.fromRGBO(109, 109, 109, 1),
+                                                  color: greyColor,
                                                   fontSize: mq.width * .035),
                                             ),
                                           ),
@@ -463,7 +463,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                     fixedSize: Size(mq.width * .35, mq.height * .08),
-                                    backgroundColor: const Color.fromRGBO(255, 135, 81, 1.0),
+                                    backgroundColor: orangeColor,
                                     padding: EdgeInsets.zero,
                                     shadowColor: Colors.transparent,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
@@ -489,7 +489,7 @@ class _SignCoupleScreenState extends State<SignCoupleScreen> {
                             onPressed: () async {},
                             style: ElevatedButton.styleFrom(
                                 fixedSize: Size(mq.width * .35, mq.height * .08),
-                                backgroundColor: Color.fromRGBO(188, 188, 188, 1.0),
+                                backgroundColor: hintColor,
                                 padding: EdgeInsets.zero,
                                 shadowColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),

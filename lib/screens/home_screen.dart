@@ -207,10 +207,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       // ┏━━━━━━━━━━━━━━━━━━┓
                       // ┃  광고 하단 공백  ┃
                       // ┗━━━━━━━━━━━━━━━━━━┛
-                      Container(
-                        color: Colors.white,
-                        height: mq.height * .03,
-                      )
+                      APIs.me.adNotShow
+                          ? Container()
+                          : Container(
+                              color: Colors.white,
+                              height: mq.height * .03,
+                            )
                     ],
                   ),
                 ),

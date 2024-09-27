@@ -66,7 +66,7 @@ class _CoupleRequestSuccessScreenState extends State<CoupleRequestSuccessScreen>
               top: mq.height * .1,
               left: mq.width * .1,
               child: Container(
-                child: Text("안녕하세요!", style: TextStyle(color: Color.fromRGBO(255, 135, 81, 1.0), fontSize: mq.width * .04)),
+                child: Text("안녕하세요!", style: TextStyle(color: orangeColor, fontSize: mq.width * .04)),
               )),
 
           // Title - ㅇㅇㅇ 님과의
